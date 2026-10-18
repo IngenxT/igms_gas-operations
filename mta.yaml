@@ -6,6 +6,10 @@ modules:
 - name: igms_gascockpit-srv
   type: nodejs
   path: gen/srv
+  requires:
+  - name: igms_gascockpit-auth
+  - name: igms_gascockpit-destination
+  - name: igms_gascockpit-connectivity
   provides:
   - name: srv-api
     properties:
@@ -13,13 +17,47 @@ modules:
   parameters:
     buildpack: nodejs_buildpack
     instances: 1
+    memory: 256MB
+    disk-quota: 256MB
+    readiness-health-check-type: http
+    readiness-health-check-http-endpoint: /health
   build-parameters:
     builder: npm-ci
+- name: igms_gascockpit-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: igms_gascockpit-destination        # FIX: was igms_gascockpit-destination-service
+    parameters:
+      content-target: true
+  - name: igms_gascockpit_html_repo_host
+    parameters:
+      service-key:
+        name: igms_gascockpit_html_repo_host-key
+  - name: igms_gascockpit-auth
+    parameters:
+      service-key:
+        name: igms_gascockpit-auth-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: igms_gas_operations_igms_gascockpit_html_repo_host
+          ServiceInstanceName: igms_gascockpit-html5-app-host-service
+          ServiceKeyName: igms_gascockpit_html_repo_host-key
+          sap.cloud.service: igms_gas_operations
+        - Authentication: OAuth2UserTokenExchange
+          Name: igms_gas_operations_igms_gascockpit_auth
+          ServiceInstanceName: igms_gascockpit-auth
+          ServiceKeyName: igms_gascockpit-auth-key
+          sap.cloud.service: igms_gas_operations
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
 - name: igms_gascockpit-app-content
   type: com.sap.application.content
   path: .
   requires:
-  - name: igms_gascockpit-repo-host
+  - name: igms_gascockpit_html_repo_host
     parameters:
       content-target: true
   build-parameters:
@@ -40,17 +78,37 @@ modules:
     - npm run build:cf
     supported-platforms: []
 resources:
-- name: igms_gascockpit-repo-host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: igms_gascockpit-html5-service
-    service-plan: app-host
-- name: igms_gascockpit-destination-service
+- name: igms_gascockpit-auth
   type: org.cloudfoundry.managed-service
   parameters:
     config:
-      HTML5Runtime_enabled: false
+      oauth2-configuration:
+        credential-types:
+        - binding-secret
+        - x509
+      role-collections:
+      - description: generated
+        name: BalancingScheduling-ConfirmNomination-Button (igms_gascockpit ${org}-${space})
+        role-template-references:
+        - $XSAPPNAME.BalancingScheduling-ConfirmNomination-Button
+      - description: generated
+        name: AllocTicketing-Ticketing-Button (igms_gascockpit ${org}-${space})
+        role-template-references:
+        - $XSAPPNAME.AllocTicketing-Ticketing-Button
+      - description: generated
+        name: AllocTicketing-AllocateSave-Button (igms_gascockpit ${org}-${space})
+        role-template-references:
+        - $XSAPPNAME.AllocTicketing-AllocateSave-Button
+      tenant-mode: dedicated
+      xsappname: igms_gascockpit-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: igms_gascockpit-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true             # FIX: needed for html5-repo deploy mode
       init_data:
         instance:
           destinations:
@@ -59,11 +117,29 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
           existing_destinations_policy: update
-      version: 1.0.0
     service: destination
-    service-name: igms_gascockpit-destination-service
     service-plan: lite
+  requires:
+  - name: srv-api
+- name: igms_gascockpit-connectivity
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: connectivity
+    service-plan: lite
+- name: igms_gascockpit_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: igms_gascockpit-html5-app-host-service
+    service-plan: app-host
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true

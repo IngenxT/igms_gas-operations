@@ -24,6 +24,19 @@
           "odataVersion": "4.0"
         }
       }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "igms_gas_operations-igms_gas_operations": {
+          "semanticObject": "igms_gas_operations",
+          "action": "igms_gas_operations",
+          "title": "{{igms_gas_operations-igms_gas_operations.flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
@@ -196,5 +209,9 @@
     "resourceRoots": {
       "com.ingenx.igmsgasflow": "./"
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "igms_gas_operations"
   }
 }
