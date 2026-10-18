@@ -1,0 +1,291 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table">
+
+    <Dialog id="IdTicketExpandDialog" stretch="true" draggable="true">
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Title text="Scheduled Items" level="H4" />
+                    <HBox alignItems="Center" class="antLegendBox sapUiSmallMarginBegin">
+                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconSystem sapUiTinyMarginEnd">
+                            <core:Icon src="sap-icon://it-system" size="0.7rem" color="#44a3d9ff" />
+                        </FlexBox>
+                        <Text text="System" class="sapUiSmallMarginEnd antLegendLabel" />
+                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconManual sapUiTinyMarginEnd">
+                            <core:Icon src="sap-icon://edit" size="0.7rem" color="#ac9782ff" />
+                        </FlexBox>
+                        <Text text="Manual" class="sapUiSmallMarginEnd antLegendLabel" />
+                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconPortal sapUiTinyMarginEnd">
+                            <core:Icon src="sap-icon://customer" size="0.7rem" color="#2fcf9aff" />
+                        </FlexBox>
+                        <Text text="Portal" class="sapUiSmallMarginEnd antLegendLabel" />
+                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconNoRank sapUiTinyMarginEnd">
+                            <core:Icon src="sap-icon://warning" size="0.7rem" color="#cc0000" />
+                        </FlexBox>
+                        <Text text="No Rank" class="sapUiSmallMarginEnd antLegendLabel" />
+                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconNoRank sapUiTinyMarginEnd">
+                            <core:Icon src="sap-icon://alert" size="0.7rem" color="#cc0000" />
+                        </FlexBox>
+                        <Text text="Business Rule Blocked" class="antLegendLabel" />
+                    </HBox>
+                </contentLeft>
+                <contentMiddle>
+                    <Label text="Agg. Nominated Qty" design="Bold" class="sapUiSmallMarginEnd" />
+                    <Input value="{allocationModel>/AggrAdnq}" editable="false" width="10rem" />
+                    <Text text="{allocationModel>/NomUOM}" class="sapUiSmallMarginBeginEnd" />
+                    <Label text="Total Metered Qty" design="Bold" class="sapUiSmallMarginEnd" />
+                    <Input value="{allocationModel>/TotalMeteredQty}" editable="false" width="10rem" />
+                    <Text text="{allocationModel>/MeteredUOM}" class="sapUiSmallMarginBegin" />
+                </contentMiddle>
+                <contentRight>
+                    <Button icon="sap-icon://action-settings" type="Transparent" tooltip="Show / Hide Columns" press=".onOpenExpandColumnSettings" />
+                    <Button icon="sap-icon://excel-attachment" type="Transparent" tooltip="Export to Excel" press=".onExportScheduledItemsExpand" />
+                    <Button icon="sap-icon://decline" type="Transparent" tooltip="Close" press=".onCloseTicketExpand" />
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <content>
+            <table:Table id="IdTicketExpandTable" visibleRowCountMode="Auto" minAutoRowCount="19" selectionMode="None" rowsUpdated=".onANTRowsUpdated" enableColumnReordering="true" enableColumnFreeze="true" columnHeaderHeight="40" rowHeight="29" class="sapUiSizeCompact" height="100%">
+                <table:noData>
+                    <IllustratedMessage illustrationType="sapIllus-NoData" title="No data found" description="Please select Gas Day" />
+                </table:noData>
+                <table:columns>
+                    <table:Column label="Gas Day" width="9rem" visible="false" resizable="true" sortProperty="Gasday">
+                        <table:template><Text text="{path:'Gasday',formatter:'.formatDate'}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Customer Type" width="9rem" resizable="true" sortProperty="CustomerKind">
+                        <table:template>
+                            <ObjectStatus
+                                text="{CustomerTypeDisplay}"
+                                state="{CustomerTypeState}" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="Partner" width="9rem" resizable="true" sortProperty="Partner">
+                        <table:template><Text text="{Partner}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Partner Desc." width="14rem" visible="false" resizable="true" sortProperty="PartnerName">
+                        <table:template><Text text="{PartnerName}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Location" width="11rem" resizable="true" sortProperty="Location">
+                        <table:template><Text text="{Location}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Delivery Point" width="10rem" resizable="true" sortProperty="DeliveryPoint">
+                        <table:template><Text text="{DeliveryPoint}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Redelivery Point" width="10rem" resizable="true" sortProperty="RedeliveryPoint">
+                        <table:template><Text text="{RedeliveryPoint}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <!-- ARI006 Business Rule (Reject) — client-side pre-check flag, see
+                         allocationNTicketing.view.xml's own IdANTTicketItemTbl copy. -->
+                    <table:Column label="Business Rule" width="9rem" resizable="true">
+                        <table:template>
+                            <ObjectStatus
+                                text="{parts:[{path:'LocationType'},{path:'DeliveryPoint'},{path:'RedeliveryPoint'},{path:'ContractType'},{path:'ServiceType'},{path:'Partner'},{path:'Gasday'},{path:'ari006Model>/rules'}], formatter:'.fmtARI006Text'}"
+                                tooltip="{parts:[{path:'LocationType'},{path:'DeliveryPoint'},{path:'RedeliveryPoint'},{path:'ContractType'},{path:'ServiceType'},{path:'Partner'},{path:'Gasday'},{path:'ari006Model>/rules'}], formatter:'.fmtARI006Text'}"
+                                state="{parts:[{path:'LocationType'},{path:'DeliveryPoint'},{path:'RedeliveryPoint'},{path:'ContractType'},{path:'ServiceType'},{path:'Partner'},{path:'Gasday'},{path:'ari006Model>/rules'}], formatter:'.fmtARI006State'}"
+                                icon="{parts:[{path:'LocationType'},{path:'DeliveryPoint'},{path:'RedeliveryPoint'},{path:'ContractType'},{path:'ServiceType'},{path:'Partner'},{path:'Gasday'},{path:'ari006Model>/rules'}], formatter:'.fmtARI006Icon'}" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="Contract No." width="9rem" resizable="true" sortProperty="Contract">
+                        <table:template><Text text="{Contract}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="CorrespondingDocNo" width="10rem" resizable="true" sortProperty="CorrespondingDocNo">
+                        <table:template><Text text="{CorrespondingDocNo}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Rank" width="5rem" resizable="true" hAlign="End" sortProperty="Rank">
+                        <table:template><Text text="{Rank}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Contract Type" width="9rem" resizable="true" sortProperty="ContractType">
+                        <table:template><Text text="{ContractType}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Service Type" width="10rem" resizable="true" sortProperty="ServiceType">
+                        <table:template><Text text="{ServiceType}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Ticket Key" width="9rem" resizable="true" sortProperty="TicketKeyDisplay">
+                        <table:template>
+                            <ObjectStatus
+                                text="{TicketKeyDisplay}"
+                                visible="{= !!${TicketKeyDisplay} }"
+                                state="{parts:[{path:'TicketPurpose'},{path:'TicketStatus'}], formatter:'.fmtTicketKeyState'}"
+                                icon="{parts:[{path:'TicketPurpose'},{path:'TicketStatus'}], formatter:'.fmtTicketKeyIcon'}"
+                                tooltip="{parts:[{path:'TicketPurpose'},{path:'TicketStatus'}], formatter:'.fmtTicketKeyTooltip'}" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="Ticket Item" width="7rem" resizable="true" sortProperty="TicketItem">
+                        <table:template><Text text="{TicketItem}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Nom Key" width="9rem" resizable="true" sortProperty="NominationKey">
+                        <table:template><Text text="{NominationKey}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Material" width="9rem" resizable="true" sortProperty="Material">
+                        <table:template><Text text="{Material}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Proposed DNQ Qty" width="11rem" resizable="true" hAlign="End" sortProperty="ProposedDNQ">
+                        <table:template><Text text="{path:'ProposedDNQ',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="UOM" width="6rem" resizable="true" sortProperty="UOM">
+                        <table:template><Text text="{UOM}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="DNQ in Meter UOM" width="12rem" resizable="true" hAlign="End" sortProperty="ConversionQty">
+                        <table:template><Text text="{path:'ConversionQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Conv. UOM" width="7rem" resizable="true" sortProperty="ConversionUOM">
+                        <table:template><Text text="{ConversionUOM}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Saved Alloc Qty" width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="SavedAllocatedQty">
+                        <table:template><Text text="{path:'SavedAllocatedQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Saved Qty UOM" width="8rem" visible="false" resizable="true" sortProperty="SavedAllocatedUOM">
+                        <table:template><Text text="{SavedAllocatedUOM}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Allocated Qty" width="11rem" resizable="true" hAlign="End" sortProperty="AllocatedQty">
+                        <table:template>
+                            <Input value="{path:'AllocatedQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3},constraints:{precision:15,scale:3}}" textAlign="Right" editable="false" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="Alloc. UOM" width="8rem" resizable="true" sortProperty="AllocUOM">
+                        <table:template><Text text="{AllocUOM}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="MBG Conversion Qty" width="12rem" resizable="true" hAlign="End" sortProperty="AllocatedQtyMBG">
+                        <table:template><Text text="{path:'AllocatedQtyMBG',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Over Drawl (GSA)" width="11rem" resizable="true" hAlign="End" sortProperty="OverDrawlGSA">
+                        <table:template><Text text="{path:'OverDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" resizable="true" hAlign="End" sortProperty="AuthOverDrawlGSA">
+                        <Label text="Authorized Over draw" tooltip="Authorized Over drawl(GSA)" />
+                        <table:template><Text text="{path:'AuthOverDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Under Drawl (GSA)" width="11rem" resizable="true" hAlign="End" sortProperty="UnderDrawlGSA">
+                        <table:template><Text text="{path:'UnderDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Auth. Overrun (GTA)" width="12rem" resizable="true" hAlign="End" sortProperty="AuthOverrunGTA">
+                        <table:template><Text text="{path:'AuthOverrunGTA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Unauth. Overrun (GTA)" width="13rem" resizable="true" hAlign="End" sortProperty="UnauthOverrunGTA">
+                        <table:template><Text text="{path:'UnauthOverrunGTA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Unauth. Over Drawl (GSA)" width="13rem" resizable="true" hAlign="End" sortProperty="UnauthOverDrawlGSA">
+                        <table:template><Text text="{path:'UnauthOverDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <!-- ── OIJNOMI fields with no dedicated visible column (hidden by default) ── -->
+                    <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="OverrunGTA">
+                        <Label text="Overrun(GTA)" tooltip="Overrun(GTA)1" />
+                        <table:template><Text text="{path:'OverrunGTA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="DImbQty">
+                        <Label text="Daily Imbalance(GTA)" />
+                        <table:template><Text text="{path:'DImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="CNomQty">
+                        <Label text="Contractual Nominate" tooltip="Contractual Nominated qty" />
+                        <table:template><Text text="{path:'CNomQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="9rem" visible="false" resizable="true" sortProperty="CNomUOM">
+                        <Label text="Cont Nom. UOM" tooltip="Contractual Nominated UOM" />
+                        <table:template><Text text="{CNomUOM}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="8rem" visible="false" resizable="true" sortProperty="OijStatus">
+                        <Label text="Status" />
+                        <table:template><Text text="{OijStatus}" wrapping="false" /></table:template>
+                    </table:Column>
+
+                    <!-- ── OIJNOMI imbalance/adjustment fields (hidden by default) ───── -->
+                    <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="DPIQty">
+                        <Label text="DPI Quantity" tooltip="Daily Positive Imbalance Quantity1" />
+                        <table:template><Text text="{path:'DPIQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="DNIQty">
+                        <Label text="DNI Quantity" tooltip="Daily Negative Imbalance Quantity1" />
+                        <table:template><Text text="{path:'DNIQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="CumImbQty">
+                        <Label text="Cumulative Imb Qty" tooltip="Cumulative Imbalance Quantity" />
+                        <table:template><Text text="{path:'CumImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="ChrgImbQty">
+                        <Label text="Chrg Imb Qty" tooltip="Chargable Imbalance Quantity" />
+                        <table:template><Text text="{path:'ChrgImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="PosCumImbQty">
+                        <Label text="Cum +ve Imb Qty" tooltip="Cumulative Imbalance Quantity" />
+                        <table:template><Text text="{path:'PosCumImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="NegCumImbQty">
+                        <Label text="Cum -ve Imb Qty" tooltip="Cumulative Imbalance Quantity" />
+                        <table:template><Text text="{path:'NegCumImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="LiqAdjustQty">
+                        <Label text="Liq. Adjust Qty" tooltip="Liquidated Damages Adjusted qty" />
+                        <table:template><Text text="{path:'LiqAdjustQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="LiqDamDiscQty">
+                        <Label text="Liq. Dam. Disc Qty" tooltip="Liquidated Damaages discount" />
+                        <table:template><Text text="{path:'LiqDamDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="SellOrPayAdjQty">
+                        <Label text="Sell or Pay Adj Qty" tooltip="Sell or Pay" />
+                        <table:template><Text text="{path:'SellOrPayAdjQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="SellOrPayDiscQty">
+                        <Label text="Sell or Pay Disc qty" tooltip="Sell or Pay discounted qty" />
+                        <table:template><Text text="{path:'SellOrPayDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="SellersSFAdjQty">
+                        <Label text="Sellers SF Adj Qty" tooltip="Sell or Pay" />
+                        <table:template><Text text="{path:'SellersSFAdjQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="8rem" visible="false" resizable="true" hAlign="End" sortProperty="SSFDiscQty">
+                        <Label text="SSF disc" tooltip="Liquidated Damaages discount" />
+                        <table:template><Text text="{path:'SSFDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="TakeOrPayAdjQty">
+                        <Label text="Take or Pay Adj Qty" tooltip="Sell or Pay" />
+                        <table:template><Text text="{path:'TakeOrPayAdjQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="TakeOrPayDiscQty">
+                        <Label text="Take or Pay Disc qty" tooltip="Sell or Pay discounted qty" />
+                        <table:template><Text text="{path:'TakeOrPayDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="9rem" visible="false" resizable="true" sortProperty="GTAAdjust">
+                        <Label text="SOP/LD adjusted" tooltip="GTA adjust" />
+                        <table:template><Text text="{= ${GTAAdjust} ? 'Yes' : 'No' }" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="9rem" visible="false" resizable="true" sortProperty="GSAAdjust">
+                        <Label text="TOP/SSF Adjusted" tooltip="GSA TOP/SSF adjsuted" />
+                        <table:template><Text text="{= ${GSAAdjust} ? 'Yes' : 'No' }" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="GujDNQQty">
+                        <Label text="Qty for Gujrat DNQ" />
+                        <table:template><Text text="{path:'GujDNQQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="9rem" visible="false" resizable="true" sortProperty="GujDNQUOM">
+                        <Label text="UOM for Gujrat DNQ" />
+                        <table:template><Text text="{GujDNQUOM}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column width="8rem" visible="false" resizable="true" hAlign="End" sortProperty="DDSQty">
+                        <Label text="DDS Qty" tooltip="Daily DDS Imbalance Quantity1" />
+                        <table:template><Text text="{path:'DDSQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <!-- ── Hidden columns (toggle via column settings) ───────────────── -->
+                    <table:Column label="Location Desc." width="14rem" visible="false" resizable="true" sortProperty="LocationDesc">
+                        <table:template><Text text="{LocationDesc}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Contract Type" width="9rem" visible="false" resizable="true" sortProperty="ContractType">
+                        <table:template><Text text="{ContractType}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Material Name" width="12rem" visible="false" resizable="true" sortProperty="MaterialName">
+                        <table:template><Text text="{MaterialName}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Avg Wt GCV" width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="AVG_WT_GCV">
+                        <table:template><Text text="{path:'AVG_WT_GCV',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                    <table:Column label="Avg Wt NCV" width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="AVG_WT_NCV">
+                        <table:template><Text text="{path:'AVG_WT_NCV',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" /></table:template>
+                    </table:Column>
+                </table:columns>
+            </table:Table>
+        </content>
+    </Dialog>
+</core:FragmentDefinition>

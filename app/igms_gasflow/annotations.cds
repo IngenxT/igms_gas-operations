@@ -1,0 +1,1 @@
+using gasOpsService as service from '../../srv/igms_service';

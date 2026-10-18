@@ -1,0 +1,127 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mdc="sap.ui.mdc"
+    xmlns:mdcTable="sap.ui.mdc.table">
+
+    <Dialog id="IdCSNNominationLogsDlg" stretch="true" draggable="true">
+
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Title text="Nomination Logs" level="H3"/>
+                </contentLeft>
+                <contentRight>
+                    <Label text="Gas Day Range" design="Bold" class="sapUiTinyMarginEnd"/>
+                    <DateRangeSelection id="IdCSNLogsGasDayRange"
+                        displayFormat="dd-MM-yyyy"
+                        valueFormat="yyyy-MM-dd"
+                        width="16rem"
+                        showCurrentDateButton="true"
+                        change=".onLogsGasDayRangeChange"/>
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <mdc:Table id="IdCSNNominationLogsTable"
+                header="Nomination Logs"
+                headerVisible="true"
+                enableExport="true"
+                showRowCount="true"
+                autoBindOnInit="false"
+                sortConditions=""
+                p13nMode="Sort,Filter"
+                threshold="50"
+                width="100%"
+                noDataText="Select a Gas Day Range (max 31 days) and press Go to load nomination logs."
+                delegate="{
+                    name: 'com/ingenx/igmsgasflow/utils/CSNNominationLogsTableDelegate',
+                    payload: {}
+                }">
+
+                <mdc:type>
+                    <!-- Mirrors IdCSNTable's fixedColumnCount="3" default (Gas Day / Contract No /
+                         Nomination Item stay pinned); enableColumnFreeze lets the user change it
+                         via the column header's "Freeze Columns Up To Here" context menu. -->
+                    <mdcTable:GridTableType enableColumnFreeze="true" fixedColumnCount="3"/>
+                </mdc:type>
+
+                <mdc:quickFilter>
+                    <SegmentedButton id="IdCSNLogsMsgIndicatorSB" selectedKey="ALL" selectionChange=".onLogsMsgIndicatorFilter">
+                        <items>
+                            <SegmentedButtonItem  key="ALL" text="All"/>
+                            <SegmentedButtonItem key="E" text="Error"/>
+                            <SegmentedButtonItem key="W" text="Warning"/>
+                            <SegmentedButtonItem key="I" text="Information"/>
+                            <SegmentedButtonItem key="S" text="Success"/>
+                        </items>
+                    </SegmentedButton>
+                </mdc:quickFilter>
+
+                <mdcTable:Column propertyKey="Gasday" header="Gas Day" width="9rem" >
+                    <Text  text="{path:'Gasday', type:'sap.ui.model.odata.type.Date', formatOptions:{pattern:'dd-MM-yyyy'}}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="ContractNo" header="Contract No" width="10rem">
+                    <Text text="{ContractNo}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="NominationItem" header="Nomination Item" width="10rem">
+                    <Text text="{NominationItem}"/>
+                </mdcTable:Column>
+                <!-- <mdcTable:Column propertyKey="Timestamp" header="Time Stamp" width="12rem">
+                    <Text text="{path:'Timestamp', type:'sap.ui.model.odata.type.DateTimeOffset', formatOptions:{pattern:'dd-MM-yyyy HH:mm:ss', UTC:true}}"/>
+                </mdcTable:Column> -->
+                <mdcTable:Column propertyKey="MsgIndicator" header="Message Type" width="9rem">
+                    <ObjectStatus text="{path:'MsgIndicator', formatter:'.formatMsgIndicatorText'}" state="{path:'MsgIndicator', formatter:'.formatMsgIndicatorState'}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="DocumentType" header="Document Type" width="9rem">
+                    <Text text="{DocumentType}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="NominationKey" header="Nomination Key" width="12rem">
+                    <Text text="{NominationKey}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Material" header="Material" width="10rem">
+                    <Text text="{Material}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="DeliveryPoint" header="Delivery Point" width="10rem">
+                    <Text text="{DeliveryPoint}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="RedelivryPoint" header="Redelivery Point" width="11rem">
+                    <Text text="{RedelivryPoint}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="TransportSystem" header="Transport System" width="11rem">
+                    <Text text="{TransportSystem}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Source" header="Source" width="9rem">
+                    <Text text="{Source}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="ProposedDnq" header="Proposed DNQ" width="10rem" hAlign="End">
+                    <Text text="{path:'ProposedDnq', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="ApprovedDnq" header="Approved DNQ" width="10rem" hAlign="End">
+                    <Text text="{path:'ApprovedDnq', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Uom" header="UoM" width="6rem">
+                    <Text text="{Uom}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Message" header="Message" width="22rem">
+                    <Text text="{Message}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Createdby" header="Created By" width="9rem">
+                    <Text text="{Createdby}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Createddate" header="Created Date" width="9rem">
+                    <Text text="{path:'Createddate', type:'sap.ui.model.odata.type.Date', formatOptions:{pattern:'dd-MM-yyyy'}}"/>
+                </mdcTable:Column>
+                <mdcTable:Column propertyKey="Createdtime" header="Created Time" width="9rem">
+                    <Text text="{path:'Createdtime', type:'sap.ui.model.odata.type.TimeOfDay'}"/>
+                </mdcTable:Column>
+            </mdc:Table>
+        </content>
+
+        <endButton>
+            <Button text="Close" press=".onCloseNominationLogs"/>
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

@@ -1,0 +1,42 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <!-- Confirm Nomination's Monthly Contractual Qty gate (confirmScheduleNomination.
+         controller.js _checkMonthlyQtyGate) — rows with MonthlyContractualQty > 0 whose
+         ProjectedApprovedQty exceeds MonthlyRemainingQty are excluded from the payload sent
+         to ConfirmNomination; this dialog lists them and asks to Continue with the rest. -->
+    <Dialog id="IdCSNMonthlyQtyDialog" title="Monthly Contractual Qty Exceeded"
+        contentWidth="44rem" contentHeight="28rem" draggable="true" resizable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Text text="{monthlyQtyModel>/IntroText}" class="sapUiSmallMarginBottom" />
+                <Table id="IdCSNMonthlyQtyTable" items="{monthlyQtyModel>/Violations}"
+                    growing="true" growingThreshold="20" noDataText="No violations.">
+                    <columns>
+                        <Column><Text text="Contract No" /></Column>
+                        <Column hAlign="End"><Text text="Monthly Contractual Qty" /></Column>
+                        <Column hAlign="End"><Text text="Monthly Remaining Qty" /></Column>
+                        <Column hAlign="End"><Text text="Projected Approved Qty" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{monthlyQtyModel>ContractNo}" />
+                                <Text text="{monthlyQtyModel>MonthlyContractualQty}" />
+                                <Text text="{monthlyQtyModel>MonthlyRemainingQty}" />
+                                <Text text="{monthlyQtyModel>ProjectedApprovedQty}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <Text text="{monthlyQtyModel>/TailText}" class="sapUiSmallMarginTop" />
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Continue" type="Emphasized" visible="{monthlyQtyModel>/ShowContinue}" press=".onContinueMonthlyQtyGate" />
+        </beginButton>
+        <endButton>
+            <Button text="{monthlyQtyModel>/CancelButtonText}" press=".onCancelMonthlyQtyGate" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

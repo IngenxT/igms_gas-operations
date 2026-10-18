@@ -1,0 +1,542 @@
+<mvc:View xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    xmlns:table="sap.ui.table"
+    xmlns:rowmodes="sap.ui.table.rowmodes"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m" controllerName="com.ingenx.igmsgasflow.controller.confirmScheduleNomination" displayBlock="true">
+    <Page id="IdCSNPage" showHeader="false" enableScrolling="false">
+
+        <!-- ── Fixed Tool Header ──────────────────────────────────────────── -->
+        <subHeader>
+            <tnt:ToolHeader id="IdCSNToolHeader">
+                <Title text="{i18n>confirmScheduleNomTitle}" level="H3" />
+                <ToolbarSpacer />
+
+                <!-- Aggregated DNQ — centred, visible only after Go + data lands -->
+                <HBox id="IdCSNAggBox" alignItems="Center" class="csnAggBox" visible="{= !!${aggCSN>/deliveryText} || !!${aggCSN>/redeliveryText}}">
+
+                    <!-- Delivery -->
+                    <VBox visible="{= !!${aggCSN>/deliveryText}}" class="csnAggSide sapUiSmallMarginEnd">
+                        <Label text="Aggregated at Delivery" design="Bold" class="bnsLegendLabel csnAggLabel"/>
+                        <FormattedText id="IdCSNDeliveryAggText" htmlText="{aggCSN>/deliveryText}" class="bnsAggQtyValue"/>
+                    </VBox>
+
+                    <!-- Divider -->
+                    <core:HTML visible="{= !!${aggCSN>/deliveryText} &amp;&amp; !!${aggCSN>/redeliveryText}}" content="&lt;span class='csnAggDivider'&gt;&lt;/span&gt;"/>
+
+                    <!-- Redelivery -->
+                    <VBox visible="{= !!${aggCSN>/redeliveryText}}" class="csnAggSide sapUiSmallMarginBegin">
+                        <Label text="Aggregated at Redelivery" design="Bold" class="bnsLegendLabel csnAggLabel"/>
+                        <FormattedText id="IdCSNRedeliveryAggText" htmlText="{aggCSN>/redeliveryText}" class="bnsAggQtyValue"/>
+                    </VBox>
+                </HBox>
+
+                <ToolbarSpacer />
+                <Button id="IdCSNBtnConfirmNomination" text="Confirm Nomination" type="Emphasized" icon="sap-icon://accept" press=".onConfirmNomination" visible="{viewModel>/canConfirmNomination}"/>
+                <Button id="IdCSNBtnNominationLogs" text="Nomination Logs"  type="Emphasized" icon="sap-icon://history" press=".onOpenNominationLogs" class="sapUiTinyMarginBegin"/>
+            </tnt:ToolHeader>
+        </subHeader>
+
+        <content>
+            <layout:FixFlex id="IdCSNFixFlex" vertical="true" minFlexSize="200" class="bnsFixFlex">
+
+                <!-- ── fixContent: Filter Panel ──────────────────────────── -->
+                <layout:fixContent>
+                    <Panel id="IdCSNFilterPanel" expandable="false" expanded="true" class="sapUiSmallMarginTop">
+                        <content>
+                            <FlexBox id="IdCSNOuterFlex" justifyContent="SpaceBetween" alignItems="Start">
+
+                                <!-- Left: primary + additional filter rows -->
+                                <FlexBox id="IdCSNFiltersColumn" direction="Column">
+
+                                    <!-- Primary filters (always visible) -->
+                                    <FlexBox id="IdCSNPrimaryFilters" wrap="Wrap" alignItems="End">
+
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <SegmentedButton id="IdCSNGasDayModeSB" selectedKey="SINGLE" selectionChange=".onGasDayModeChange" width="15rem" class="sapUiTinyMarginBottom">
+                                                <items>
+                                                    <SegmentedButtonItem key="SINGLE" text="Gas Day"/>
+                                                    <SegmentedButtonItem key="RANGE" text="Gas Day Range"/>
+                                                </items>
+                                            </SegmentedButton>
+                                            <DatePicker id="IdCSNGasDay" placeholder="DD-MM-YYYY" valueFormat="yyyy-MM-dd" displayFormat="dd-MM-yyyy" width="15rem" visible="{= ${viewModel>/gasDayMode} === 'SINGLE'}" change=".onFilterValueChanged"/>
+                                            <DateRangeSelection id="IdCSNGasDayRange" showCurrentDateButton="true" change=".onGasDayRangeChange" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" width="15rem" visible="{= ${viewModel>/gasDayMode} === 'RANGE'}"/>
+                                        </FlexBox>
+
+                                        <!-- 2. Transport System -->
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <Label text="Transport System" design="Bold"/>
+                                            <MultiInput id="IdCSNTransportMI" submit="" width="14rem" showValueHelp="true" valueHelpRequest=".onOpenTransportVH" tokenUpdate=".onTransportTokenUpdate"/>
+                                        </FlexBox>
+
+                                        <!-- 3. Delivery Point -->
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <Label text="Delivery Point" design="Bold" required="{= ${viewModel>/gasDayMode} === 'RANGE'}"/>
+                                            <MultiInput id="IdCSNDeliveryMI" width="14rem" showValueHelp="true" valueHelpRequest=".onOpenDeliveryVH" tokenUpdate=".onDeliveryTokenUpdate"/>
+                                        </FlexBox>
+
+                                        <!-- 4. Redelivery Point -->
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <Label text="Redelivery Point" design="Bold" required="{= ${viewModel>/gasDayMode} === 'RANGE'}"/>
+                                            <MultiInput id="IdCSNRedeliveryMI" width="14rem" showValueHelp="true" valueHelpRequest=".onOpenRedeliveryVH" tokenUpdate=".onRedeliveryTokenUpdate"/>
+                                        </FlexBox>
+
+                                    </FlexBox>
+
+                                    <!-- Additional filters (hidden by default) -->
+                                    <FlexBox id="IdCSNAdditionalFilters" wrap="Wrap" alignItems="End" visible="{viewModel>/showAdditionalFilters}">
+
+                                        <!-- 5. Interconnect Point -->
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <Label text="Interconnect Point" design="Bold"/>
+                                            <MultiInput id="IdCSNInterconnectMI" width="14rem" showValueHelp="true" valueHelpRequest=".onOpenInterconnectVH" tokenUpdate=".onInterconnectTokenUpdate"/>
+                                        </FlexBox>
+
+                                        <!-- 6. Document Type (multi-select dropdown) -->
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <Label text="Document Type" labelFor="IdCSNDocType" design="Bold"/>
+                                            <MultiComboBox id="IdCSNDocType" width="14rem" placeholder="All" selectionChange=".onFilterValueChanged" items="{path:'/getBalancingDocumentTypes()', parameters:{$$ownRequest:true}}">
+                                                <core:Item key="{documentType}" text="{documentTypeDesc} ({documentType})"/>
+                                            </MultiComboBox>
+                                        </FlexBox>
+
+                                        <!-- 7. Material -->
+                                        <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                            <Label text="Material" design="Bold"/>
+                                            <MultiInput id="IdCSNMaterialMI" width="12rem" showValueHelp="true" valueHelpRequest=".onValueHelpMaterial" tokenUpdate=".onMaterialTokenUpdate"/>
+                                        </FlexBox>
+
+                                    </FlexBox>
+
+                                </FlexBox>
+
+                                <!-- Right: action buttons -->
+                                <VBox alignItems="End" class="sapUiMediumMarginTop balancingBtn">
+                                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <Button id="IdCSNBtnGo" text="Go" type="Emphasized" icon="sap-icon://search" press=".onSearch" class="sapUiSmallMarginEnd"/>
+                                        <Button id="IdCSNBtnClear" text="Clear" icon="sap-icon://clear-filter" press=".onClearFilters" class="sapUiSmallMarginEnd"/>
+                                        <Button id="IdCSNBtnMoreFilters" text="{= ${viewModel>/showAdditionalFilters} ? 'Less Filters' : 'More Filters'}" icon="{= ${viewModel>/showAdditionalFilters} ? 'sap-icon://less' : 'sap-icon://filter'}" press=".onToggleAdditionalFilters"/>
+                                    </HBox>
+                                </VBox>
+
+                            </FlexBox>
+                        </content>
+                    </Panel>
+                </layout:fixContent>
+
+                <!-- ── flexContent: Schedule Nominations Table ───────────── -->
+                <layout:flexContent>
+                    <table:Table id="IdCSNTable" rows="{
+                            path: '/xGMSxNOMSOURCE',
+                            parameters: {
+                                $select: 'Gasday,ContractNo,Item,Versn,NominationItem,NominationKey,Event,ContractType,ContractTypeName,MasterContractNo,Partner,PartnerName,TransportSystem,TransportSystemName,DeliveryPoint,DeliveryPointName,RedeliveryPoint,RedeliveryPointName,Material,MaterialName,Rank,DeliveryDCQ,RedeliveryDCQ,ProposedDNQ,ApprovedDNQ,isConfirmRequired,MaxDeliveryDCQ,MinDeliveryDCQ,MaxRedeliveryDCQ,MinRedeliveryDCQ,UOM,NominationStatus,Source,ServiceType,CustomerKind,CustomerInd,CustomerIndId,CorrespondingDocNo,LinkContexist,MonthlyConsumptionQty,MonthlyConsumptionUom,MonthlyContractualQty,MonthlyContractualUom,MonthlyRemainingQty,MonthlyRemainingUom,ProjectedApprovedQty,ProjectedCapRuleId,ProjectedStatus,LinkedGsaNo,LinkedGsaDcq,LinkedGsaMinDcq,LinkedGsaMaxDcq',
+                                $count: true,
+                                $$ownRequest: true
+                            },
+                            suspended: true
+                        }" fixedColumnCount="3" selectionMode="{viewModel>/tableSelectionMode}" selectionBehavior="RowSelector" enableBusyIndicator="true" enableSelectAll="true" threshold="500" scrollThreshold="-1" width="100%" rowsUpdated=".onTableRowsUpdated" rowSelectionChange=".onRowSelectionChange" filter=".onCSNColumnFilter">
+                        <table:rowMode>
+                            <rowmodes:Auto minRowCount="5"/>
+                        </table:rowMode>
+                        <table:rowSettingsTemplate>
+                            <table:RowSettings highlight="{= ${isConfirmRequired} === 'No' ? 'Success' : 'None'}"/>
+                        </table:rowSettingsTemplate>
+                        <table:noData>
+                            <VBox justifyContent="Center" alignItems="Center" class="sapUiMediumMarginTop">
+                                <core:Icon src="{viewModel>/noDataIcon}" size="3rem" class="sapUiMediumMarginBottom" color="var(--sapNeutralColor)"/>
+                                <Title text="{viewModel>/noDataTitle}" level="H5"/>
+                                <Text text="{viewModel>/noDataText}"/>
+                            </VBox>
+                        </table:noData>
+                        <table:extension>
+                            <OverflowToolbar>
+                                <Title id="IdCSNTableTitle" text="Schedule Nominations" titleStyle="Auto" />
+                                <ToolbarSeparator />
+                                <HBox alignItems="Center" class="bnsLegendBox">
+                                    <FlexBox alignItems="Center" justifyContent="Center" class="bnsLegendIcon bnsLegendIconSystem">
+                                        <core:Icon src="sap-icon://it-system" size="0.7rem" color="#44a3d9ff" />
+                                    </FlexBox>
+                                    <Text text="System" class="sapUiTinyMarginEnd bnsLegendLabel" />
+
+                                    <FlexBox alignItems="Center" justifyContent="Center" class="bnsLegendIcon bnsLegendIconManual">
+                                        <core:Icon src="sap-icon://edit" size="0.7rem" color="#ac9782ff" />
+                                    </FlexBox>
+                                    <Text text="Manual" class="sapUiTinyMarginEnd bnsLegendLabel" />
+
+                                    <FlexBox alignItems="Center" justifyContent="Center" class="bnsLegendIcon bnsLegendIconCustomer">
+                                        <core:Icon src="sap-icon://customer" size="0.7rem" color="#2fcf9aff" />
+                                    </FlexBox>
+                                    <Text text="Portal" class="sapUiTinyMarginEnd bnsLegendLabel" />
+
+                                    <core:HTML content="&lt;span class='bnsLegendSwatch bnsSwatchConfirmed'&gt;&lt;/span&gt;" />
+                                    <Text text="Nomination Confirmed" class="bnsLegendLabel" />
+                                </HBox>
+                                <ToolbarSeparator />
+
+                                <SegmentedButton id="IdCSNSBConfirmedFilter" selectedKey="NOT_CONFIRMED" selectionChange=".onSegmentedButtonFilter">
+                                    <items>
+                                        <SegmentedButtonItem key="ALL" text="All" />
+                                        <SegmentedButtonItem key="CONFIRMED" text="Confirmed" />
+                                        <SegmentedButtonItem key="NOT_CONFIRMED" text="Not Confirmed" />
+                                    </items>
+                                </SegmentedButton>
+                                <ToolbarSpacer />
+                                <Button id="IdCSNBtnExport" icon="sap-icon://excel-attachment" type="Transparent" tooltip="Export to Spreadsheet" press=".onExportToExcel">
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                                <Button id="IdCSNBtnRefresh" icon="sap-icon://refresh" tooltip="Refresh" press=".onRefreshTable">
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                                <Button id="IdCSNDataIssuesBtn" icon="sap-icon://alert" text="Data Issue ({csnDataIssuesModel>/Count})"
+                                    type="{= ${csnDataIssuesModel>/Count} > 0 ? 'Attention' : 'Transparent' }"
+                                    tooltip="Rows with Monthly Contractual Qty &gt; 0 where Projected Approved Qty exceeds Monthly Remaining Qty — as of last refresh"
+                                    press=".onShowMonthlyQtyIssues">
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                                <Button id="IdCSNBtnColumnSettings" icon="sap-icon://action-settings" type="Transparent" tooltip="Show / Hide Columns" press=".onOpenCSNColumnSettings">
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                            </OverflowToolbar>
+                        </table:extension>
+                        <table:columns>
+
+                            <!-- ── Fixed column 1: Gas Day ─────────────────────────── -->
+                            <table:Column width="9rem" hAlign="Begin" sortProperty="Gasday" filterProperty="Gasday">
+                                <Label text="Gas Day"/>
+                                <table:template>
+                                    <Text text="{path:'Gasday', type:'sap.ui.model.odata.type.Date', formatOptions:{pattern:'dd-MM-yyyy', UTC:true}}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- ── Fixed column 2: Contract Type ───────────────────── -->
+                            <table:Column width="10rem" hAlign="Begin" sortProperty="ContractType" filterProperty="ContractType">
+                                <Label text="Contract Type"/>
+                                <table:template>
+                                    <Text text="{ContractType}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- ── Fixed column 3: Contract No ─────────────────────── -->
+                            <table:Column width="10rem" hAlign="Begin" sortProperty="ContractNo" filterProperty="ContractNo">
+                                <Label text="Contract No"/>
+                                <table:template>
+                                    <Text text="{ContractNo}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- ── Scrollable columns ──────────────────────────────── -->
+                            <table:Column width="6rem" hAlign="End">
+                                <Label text="Item"/>
+                                <table:template>
+                                    <Text text="{Item}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="6rem" hAlign="End">
+                                <Label text="Version"/>
+                                <table:template>
+                                    <Text text="{Versn}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="14rem" hAlign="Begin">
+                                <Label text="Contract Type Desc."/>
+                                <table:template>
+                                    <Text text="{ContractTypeName}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="Begin" sortProperty="MasterContractNo" filterProperty="MasterContractNo">
+                                <Label text="Master Contract"/>
+                                <table:template>
+                                    <Text text="{MasterContractNo}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="14rem" hAlign="Begin" sortProperty="ServiceType" filterProperty="ServiceType">
+                                <Label text="Service Type"/>
+                                <table:template>
+                                    <Text text="{ServiceType}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="12rem" hAlign="Begin" visible="false">
+                                <Label text="Customer Type"/>
+                                <table:template>
+                                    <Text text="{CustomerKind}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="12rem" hAlign="Begin" sortProperty="TransportSystem" filterProperty="TransportSystem">
+                                <Label text="Transport System"/>
+                                <table:template>
+                                    <Text text="{TransportSystem}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="18rem" hAlign="Begin">
+                                <Label text="Transport System Name"/>
+                                <table:template>
+                                    <Text text="{TransportSystemName}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="10rem" hAlign="Begin" sortProperty="Partner" filterProperty="Partner">
+                                <Label text="Partner No"/>
+                                <table:template>
+                                    <Text text="{Partner}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="18rem" hAlign="Begin">
+                                <Label text="Partner Name"/>
+                                <table:template>
+                                    <Text text="{PartnerName}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="Begin" sortProperty="DeliveryPoint" filterProperty="DeliveryPoint">
+                                <Label text="Delivery Point"/>
+                                <table:template>
+                                    <Text text="{DeliveryPoint}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="18rem" hAlign="Begin">
+                                <Label text="Delivery Point Name"/>
+                                <table:template>
+                                    <Text text="{DeliveryPointName}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="12rem" hAlign="Begin" sortProperty="RedeliveryPoint" filterProperty="RedeliveryPoint">
+                                <Label text="Redelivery Point"/>
+                                <table:template>
+                                    <Text text="{RedeliveryPoint}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="18rem" hAlign="Begin">
+                                <Label text="Redelivery Point Name"/>
+                                <table:template>
+                                    <Text text="{RedeliveryPointName}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="12rem" hAlign="Begin" sortProperty="Material" filterProperty="Material">
+                                <Label text="Material"/>
+                                <table:template>
+                                    <Text text="{Material}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="18rem" hAlign="Begin">
+                                <Label text="Material Name"/>
+                                <table:template>
+                                    <Text text="{MaterialName}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="6rem" hAlign="Begin"  sortProperty="UOM" filterProperty="UOM">
+                                <Label text="UOM"/>
+                                <table:template>
+                                    <Text text="{UOM}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="12rem" hAlign="Begin" sortProperty="Rank" filterProperty="Rank">
+                                <Label text="Rank"/>
+                                <table:template>
+                                    <Text text="{Rank}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Nomination Item"/>
+                                <table:template>
+                                    <Text text="{NominationItem}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="14rem" hAlign="Begin" sortProperty="NominationKey" filterProperty="NominationKey">
+                                <Label text="Nomination Key"/>
+                                <table:template>
+                                    <Text text="{NominationKey}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- DCQ / Max DCQ / Min DCQ: a leg linked to an unbundled GSA shows the GSA's values (LinkedGsa*) -->
+                            <!-- DCQ: DeliveryDCQ when DeliveryPoint is set, else RedeliveryDCQ -->
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="DCQ"/>
+                                <table:template>
+                                    <Text text="{parts:[{path:'DeliveryPoint' },{path:'DeliveryDCQ'},{path:'RedeliveryDCQ'},{path:'LinkedGsaDcq'}], formatter:'.fmtConditionalQty'}"
+                                          tooltip="{= ${LinkedGsaNo} ? 'From linked GSA ' + ${LinkedGsaNo} : '' }"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Max DCQ: MaxDeliveryDCQ when DeliveryPoint set, else MaxRedeliveryDCQ -->
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Max DCQ"/>
+                                <table:template>
+                                    <Text text="{parts:[{path:'DeliveryPoint'},{path:'MaxDeliveryDCQ'},{path:'MaxRedeliveryDCQ'},{path:'LinkedGsaMaxDcq'}], formatter:'.fmtConditionalQty'}"
+                                          tooltip="{= ${LinkedGsaNo} ? 'From linked GSA ' + ${LinkedGsaNo} : '' }"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Min DCQ: MinDeliveryDCQ when DeliveryPoint set, else MinRedeliveryDCQ -->
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Min DCQ"/>
+                                <table:template>
+                                    <Text text="{parts:[{path:'DeliveryPoint'},{path:'MinDeliveryDCQ'},{path:'MinRedeliveryDCQ'},{path:'LinkedGsaMinDcq'}], formatter:'.fmtConditionalQty'}"
+                                          tooltip="{= ${LinkedGsaNo} ? 'From linked GSA ' + ${LinkedGsaNo} : '' }"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Proposed DNQ"/>
+                                <table:template>
+                                    <Text text="{path:'ProposedDNQ', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Approved DNQ"/>
+                                <table:template>
+                                    <Text text="{path:'ApprovedDNQ', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Live ARI004 capping preview — "what will be approved if confirmed
+                                 now", computed server-side on every table READ (see
+                                 balancingScheduling-service.js / srv/utils/ari004Rules.js).
+                                 Estimated as of last refresh; the confirm action always
+                                 recomputes fresh at posting time. -->
+                            <table:Column width="14rem" hAlign="End">
+                                <Label text="Projected Approved Qty"/>
+                                <table:template>
+                                    <ObjectStatus
+                                        text="{path:'ProjectedApprovedQty', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"
+                                        state="{path:'ProjectedStatus', formatter:'.formatProjectedStatus'}"
+                                        tooltip="{ProjectedCapRuleId}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- ── Monthly Consumption Qty / UOM ───────────────────── -->
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Monthly Consumption Qty"/>
+                                <table:template>
+                                    <Text text="{path:'MonthlyConsumptionQty', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="8rem" hAlign="Begin">
+                                <Label text="Monthly Consumption UOM"/>
+                                <table:template>
+                                    <Text text="{MonthlyConsumptionUom}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- ── Monthly Contractual Qty / UOM ───────────────────── -->
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Monthly Contractual Qty"/>
+                                <table:template>
+                                    <Text text="{path:'MonthlyContractualQty', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="8rem" hAlign="Begin">
+                                <Label text="Monthly Contractual UOM"/>
+                                <table:template>
+                                    <Text text="{MonthlyContractualUom}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <!-- ── Monthly Remaining Qty / UOM ──────────────────────── -->
+                            <table:Column width="11rem" hAlign="End">
+                                <Label text="Monthly Remaining Qty"/>
+                                <table:template>
+                                    <Text text="{path:'MonthlyRemainingQty', type:'sap.ui.model.odata.type.Decimal', constraints:{precision:13, scale:3}}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="8rem" hAlign="Begin">
+                                <Label text="Monthly Remaining UOM"/>
+                                <table:template>
+                                    <Text text="{MonthlyRemainingUom}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="Center" visible="false">
+                                <Label text="Confirm Req."/>
+                                <table:template>
+                                    <Text text="{isConfirmRequired}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="Begin" visible="false">
+                                <Label text="Status"/>
+                                <table:template>
+                                    <Text text="{NominationStatus}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="12rem" hAlign="Begin" visible="false">
+                                <Label text="Event"/>
+                                <table:template>
+                                    <Text text="{Event}" wrapping="false"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="10rem" hAlign="Begin" sortProperty="Source" filterProperty="Source">
+                                <Label text="Source"/>
+                                <table:template>
+                                    <ObjectStatus text="{path:'Source', formatter:'.fmtSourceText'}" state="{path:'Source', formatter:'.fmtSourceState'}"/>
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="Begin" visible="false">
+                                <Label text="Corresponding Doc No"/>
+                                <table:template>
+                                    <Text text="{CorrespondingDocNo}"/>
+                                </table:template>
+                            </table:Column>
+                            <table:Column width="11rem" hAlign="Begin" visible="false">
+                                <Label text="Linked Indicator"/>
+                                <table:template>
+                                    <Text text="{LinkContexist}"/>
+                                </table:template>
+                            </table:Column>
+                            <table:Column width="14rem" hAlign="Begin" visible="false">
+                                <Label text="Primary Contract"/>
+                                <table:template><Text text="{IsPrimaryContract}" wrapping="false"/></table:template>
+                            </table:Column>
+
+                            <!-- <table:Column width="14rem" hAlign="Begin">
+                                <Label text="Customer Ind."/>
+                                <table:template><Text text="{CustomerInd}" wrapping="false"/></table:template>
+                            </table:Column>
+
+                            <table:Column width="11rem" hAlign="Begin">
+                                <Label text="Customer Ind. ID"/>
+                                <table:template><Text text="{CustomerIndId}"/></table:template>
+                            </table:Column> -->
+
+                        </table:columns>
+                    </table:Table>
+                </layout:flexContent>
+
+            </layout:FixFlex>
+        </content>
+
+    </Page>
+</mvc:View>

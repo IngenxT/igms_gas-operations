@@ -1,0 +1,867 @@
+<mvc:View xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:rowmodes="sap.ui.table.rowmodes"
+    xmlns:tnt="sap.tnt"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m" controllerName="com.ingenx.igmsgasflow.controller.allocationNTicketing" displayBlock="true">
+
+    <Page id="IdANTPage" showHeader="false" enableScrolling="false">
+
+        <subHeader>
+            <tnt:ToolHeader id="IdANTToolHeader">
+                <Title text="Allocation &amp; Ticketing" level="H3" />
+                <ToolbarSpacer />
+                <Button id="IdAllocNTicketAllocBtn" text="Simulate" type="Emphasized" press=".onPressRunAllocation" class="sapUiTinyMarginEnd" visible="{allocationModel>/canSimulate}" />
+                <Button id="IdAllocNTicketAllocNSaveBtn" text="Allocate &amp; Save" type="Emphasized" press=".onPressAllocateNSave" class="sapUiTinyMarginEnd" visible="{allocationModel>/canAllocateSave}" />
+
+                <Button id="IdANATicketBtn" text="Ticketing" type="Emphasized" press=".onPressTicket" class="sapUiTinyMarginEnd" visible="{allocationModel>/canTicket}" />
+                <Button id="IdAllocNTicketLogBtn" text="Ticket Log" type="Ghost" press=".onPressTicketLog" visible="false" />
+            </tnt:ToolHeader>
+        </subHeader>
+
+        <content>
+            <layout:FixFlex id="IdANTFixFlex" vertical="true" minFlexSize="200">
+
+                <layout:fixContent>
+                    <Panel id="IdANTFilterPanel1" expandable="false" expanded="true">
+                        <content>
+                            <FlexBox class="sapUiSmallMarginTop" justifyContent="SpaceBetween" alignItems="End">
+                                <FlexBox wrap="Wrap" alignItems="End">
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="Gas Day" labelFor="IdANTFilterGasDay" design="Bold" required="true" />
+                                        <DateRangeSelection id="IdANTFilterGasDay" placeholder="{i18n>antGasDayRangePlaceholder}" displayFormat="dd-MM-yyyy" width="16rem" change=".onGasDayChange" />
+                                    </FlexBox>
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="Transport System" labelFor="IdANTFilterTransportSystem" design="Bold" />
+                                        <MultiInput id="IdANTFilterTransportSystem" width="14rem" showValueHelp="true" valueHelpRequest=".onValueHelpTransport" tokenUpdate=".onTransportTokenUpdate" valueLiveChange=".onTransportLiveChange" />
+                                    </FlexBox>
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="Delivery Point" labelFor="IdANTFilterDeliveryPoint" design="Bold" />
+                                        <MultiInput id="IdANTFilterDeliveryPoint" width="14rem" showValueHelp="true" valueHelpRequest=".onValueHelpDelivery" tokenUpdate=".onDeliveryTokenUpdate" valueLiveChange=".onDeliveryLiveChange" />
+                                    </FlexBox>
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="Redelivery Point" labelFor="IdANTFilterRedeliveryPoint" design="Bold" />
+                                        <MultiInput id="IdANTFilterRedeliveryPoint" width="14rem" showValueHelp="true" valueHelpRequest=".onValueHelpRedelivery" tokenUpdate=".onRedeliveryTokenUpdate" valueLiveChange=".onRedeliveryLiveChange" />
+                                    </FlexBox>
+                                    <FlexBox visible="false" direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="Interconnect Point" labelFor="IdANTFilterInterconnectPoint" design="Bold" />
+                                        <MultiInput id="IdANTFilterInterconnectPoint" width="14rem" showValueHelp="true" valueHelpRequest=".onValueHelpInterconnect" tokenUpdate=".onInterconnectTokenUpdate" valueLiveChange=".onInterconnectLiveChange" />
+                                    </FlexBox>
+                                </FlexBox>
+                                <HBox alignItems="End" class="sapUiSmallMarginBottom">
+                                    <Button id="IdANTBtnGo" text="Go" type="Emphasized" icon="sap-icon://search" press=".onSearch" class="sapUiSmallMarginEnd" />
+                                    <Button id="IdANTBtnClear" text="Clear" icon="sap-icon://clear-filter" press=".onClearFilters" />
+                                </HBox>
+                            </FlexBox>
+                        </content>
+                    </Panel>
+                </layout:fixContent>
+
+                <layout:flexContent>
+                    <VBox>
+
+                        <!-- ─── SCADA Measurements ───────────────────────────────── -->
+                        <VBox class="antFilterPanel" busy="{allocationModel>/gdaBusy}" busyIndicatorDelay="0">
+                            <OverflowToolbar>
+                                <Title text="Meter Reading / Customer Quantity" level="H4" />
+                                <ToolbarSeparator />
+                                <SegmentedButton id="IdANTGDASegBtn" selectedKey="OWN" selectionChange=".onANTGDATabSegmentChange">
+                                    <items>
+                                        <SegmentedButtonItem id="IdANTGDABtnOwn" key="OWN" text="Own Pipeline" />
+                                        <SegmentedButtonItem id="IdANTGDABtnHybrid" key="HYBRID" text="Hybrid" />
+                                        <SegmentedButtonItem id="IdANTGDABtnTP" key="THIRDPARTY" text="Third Party" />
+                                        <SegmentedButtonItem id="IdANTGDABtnEntryPoint" key="ENTRYPOINT" text="Entry Point" />
+                                    </items>
+                                </SegmentedButton>
+                                <ToolbarSpacer />
+                                <Button id="IdANTGDAHybridErrStrip" icon="sap-icon://message-error" text="{i18n>antGdaHybridOverAllocShort}" type="Reject" visible="false" press=".onShowGdaOverAllocInfo">
+                                    <customData>
+                                        <core:CustomData key="titleKey" value="antGdaHybridOverAllocShort" />
+                                        <core:CustomData key="textKey" value="antGdaHybridOverAllocFull" />
+                                    </customData>
+                                </Button>
+                                <Button id="IdANTGDAEntryPointErrStrip" icon="sap-icon://message-error" text="{i18n>antGdaEpOverAllocShort}" type="Reject" visible="false" press=".onShowGdaOverAllocInfo">
+                                    <customData>
+                                        <core:CustomData key="titleKey" value="antGdaEpOverAllocShort" />
+                                        <core:CustomData key="textKey" value="antGdaEpOverAllocFull" />
+                                    </customData>
+                                </Button>
+                                <Text id="IdANTGDACountText" text="" class="sapUiSmallMarginBegin" />
+                                <Button id="IdSCADARefreshBtn" icon="sap-icon://refresh" type="Transparent" tooltip="Refresh SCADA Data" press=".onRefreshScada" />
+                                <Button id="IdSCADAExportBtn" icon="sap-icon://excel-attachment" type="Transparent" tooltip="Export to Excel" press=".onExportScada" />
+                                <Button id="IdSCADAIssuesBtn" icon="sap-icon://alert" text="Issues ({dataIssuesModel>/Count})" type="{= ${dataIssuesModel>/Count} > 0 ? 'Attention' : 'Transparent' }" tooltip="Missing SCADA Reading / Uploaded Qty / GCV,NCV / Conversion Failures" press=".onShowDataIssues" />
+                            </OverflowToolbar>
+
+                            <!-- Own Pipeline Table -->
+                            <VBox id="IdANTGDAOwnSection" visible="true">
+                                <table:Table id="IdANTGDAOwnTable" rows="{path: 'ownModel>/'}" threshold="200" alternateRowColors="true" selectionMode="MultiToggle" rowSelectionChange=".onGDARowSelectionChange" class="antGdaTable sapUiSizeCompact">
+                                    <table:rowMode>
+                                        <rowmodes:Fixed rowCount="6" />
+                                    </table:rowMode>
+                                    <table:noData>
+                                        <IllustratedMessage illustrationType="sapIllus-NoData" illustrationSize="Small" title="No data" description="Select a Gas Day range and press Go." />
+                                    </table:noData>
+                                    <table:columns>
+                                        <table:Column width="7rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text text="{path: 'ownModel>_gasDay', formatter: '.formatDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Business Location" />
+                                            <table:template>
+                                                <Text text="{ownModel>YybusLocation}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Customer" />
+                                            <table:template>
+                                                <Text text="{ownModel>Yycustomer}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text text="{path:'ownModel>YydateGas', formatter:'.fmtDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="13rem">
+                                            <Label text="Meter Reading (SM3)" />
+                                            <table:template>
+                                                <ObjectNumber number="{path:'ownModel>YycumVolCm', formatter:'.fmtQty'}" state="Information" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="14rem">
+                                            <Label text="Qty to Allocate (SM3)" />
+                                            <table:template>
+                                                <ObjectNumber number="{path:'ownModel>YycumVolCm', formatter:'.fmtQty'}" state="Information" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem">
+                                            <Label text="Avg Wt GCV" />
+                                            <table:template>
+                                                <Text text="{path:'ownModel>YyavgGcvCm', formatter:'.fmtQty'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem">
+                                            <Label text="Avg Wt NCV" />
+                                            <table:template>
+                                                <Text text="{path:'ownModel>YyavgNcvCm', formatter:'.fmtQty'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column hAlign="Begin">
+                                            <Label text="Meter Reading DT" />
+                                            <table:template>
+                                                <Text text="{path:'ownModel>YycdateCm', formatter:'.fmtDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                    </table:columns>
+                                </table:Table>
+                            </VBox>
+
+                            <!-- Hybrid Table -->
+                            <VBox id="IdANTGDAHybridSection" visible="false">
+                                <table:Table id="IdANTGDAHybridTable" rows="{path: 'hybridModel>/'}" threshold="200" alternateRowColors="false" selectionMode="MultiToggle" rowSelectionChange=".onGDARowSelectionChange" rowsUpdated=".onANTGDAHybridRowsUpdated" class="antGdaTable sapUiSizeCompact">
+                                    <table:rowMode>
+                                        <rowmodes:Fixed rowCount="6" />
+                                    </table:rowMode>
+                                    <table:noData>
+                                        <IllustratedMessage illustrationType="sapIllus-NoData" illustrationSize="Small" title="No data" description="Select a Gas Day range and press Go." />
+                                    </table:noData>
+                                    <table:columns>
+                                        <table:Column width="7rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text text="{path: 'hybridModel>_gasDay', formatter: '.formatDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <!-- Always shows, GROUP row included — the GROUP row is the location
+                                             header (bold + shaded via igmsGroupHdr), with PRIMARY/SECONDARY
+                                             readings on the rows below it, same fix as the Entry Point table. -->
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Business Location" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{hybridModel>YybusLocation}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="22rem" hAlign="Begin">
+                                            <Label text="Customer" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>Yycustomer'},{path:'hybridModel>YybusLocation'}], formatter:'.fmtHHCust'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>YydateGas'}], formatter:'.fmtHHDate'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="8rem" hAlign="Begin">
+                                            <Label text="Role" />
+                                            <table:template>
+                                                <ObjectStatus text="{parts:[{path:'hybridModel>_type'}], formatter:'.fmtHHRoleText'}" state="{parts:[{path:'hybridModel>_type'}], formatter:'.fmtHHRoleState'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="12rem" hAlign="End">
+                                            <Label text="Meter Reading (SM3)" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>_scadaMeter'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="13rem" hAlign="End">
+                                            <Label text="Customer Qty (SM3)" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>_bifurQty'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="14rem" hAlign="End">
+                                            <Label text="Qty to Allocate (SM3)" />
+                                            <table:template>
+                                                <ObjectNumber number="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>_allocQty'}], formatter:'.fmtHHQty'}" state="{parts:[{path:'hybridModel>_type'}], formatter:'.fmtHHAllocState'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" hAlign="End">
+                                            <Label text="Avg Wt GCV" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>YyavgGcvCm'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" hAlign="End">
+                                            <Label text="Avg Wt NCV" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>YyavgNcvCm'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Balanced" />
+                                            <table:template>
+                                                <ObjectStatus text="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>_showBalance'},{path:'hybridModel>_balState'},{path:'hybridModel>_balDiff'}], formatter:'.fmtHHBalText'}" state="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>_balState'}], formatter:'.fmtHHBalState'}" icon="{parts:[{path:'hybridModel>_type'},{path:'hybridModel>_balState'}], formatter:'.fmtHHBalIcon'}" />
+                                            </table:template>
+                                        </table:Column>
+                                    </table:columns>
+                                </table:Table>
+                            </VBox>
+
+                            <!-- Third Party Table -->
+                            <VBox id="IdANTGDATPSection" visible="false">
+                                <table:Table id="IdANTGDATPTable" rows="{path: 'tpModel>/'}" threshold="200" alternateRowColors="true" selectionMode="MultiToggle" rowSelectionChange=".onGDARowSelectionChange" class="antGdaTable sapUiSizeCompact">
+                                    <table:rowMode>
+                                        <rowmodes:Fixed rowCount="6" />
+                                    </table:rowMode>
+                                    <table:noData>
+                                        <IllustratedMessage illustrationType="sapIllus-NoData" illustrationSize="Small" title="No data" description="Select a Gas Day range and press Go." />
+                                    </table:noData>
+                                    <table:columns>
+                                        <table:Column width="7rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text text="{path: 'tpModel>_gasDay', formatter: '.formatDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Business Location" />
+                                            <table:template>
+                                                <Text text="{tpModel>YybusLocation}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Customer" />
+                                            <table:template>
+                                                <Text text="{tpModel>Yycustomer}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <!-- <table:Column width="12rem" hAlign="Begin">
+                                            <Label text="User" />
+                                            <table:template>
+                                                <Text text="{tpModel>YrnameNongail}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column> -->
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text text="{path:'tpModel>YydateGas', formatter:'.fmtDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="End">
+                                            <Label text="Customer Qty" />
+                                            <table:template>
+                                                <Text text="{path:'tpModel>YyallocQtyNongail', formatter:'.fmtTpQty'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Uploaded UOM" />
+                                            <table:template>
+                                                <Text text="{tpModel>YyallocUomNongail}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="14rem" hAlign="End">
+                                            <Label text="Qty to Allocate (SM3)" />
+                                            <table:template>
+                                                <ObjectNumber number="{path:'tpModel>YyallocQtyNongailscm', formatter:'.fmtTpQty'}" state="Information" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" hAlign="End">
+                                            <Label text="Avg Wt GCV" />
+                                            <table:template>
+                                                <Text text="{path:'tpModel>YygcvNgail', formatter:'.fmtQty'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" hAlign="End">
+                                            <Label text="Avg Wt NCV" />
+                                            <table:template>
+                                                <Text text="{path:'tpModel>YyncvNgail', formatter:'.fmtQty'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Alloc DT" />
+                                            <table:template>
+                                                <Text text="{path:'tpModel>YydateNongail', formatter:'.fmtDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                    </table:columns>
+                                </table:Table>
+                            </VBox>
+
+                            <!-- Entry Point Table -->
+                            <VBox id="IdANTGDAEntryPointSection" visible="false">
+                                <table:Table id="IdANTGDAEntryPointTable" rows="{path: 'epModel>/'}" threshold="200" alternateRowColors="false" selectionMode="MultiToggle" rowSelectionChange=".onGDARowSelectionChange" rowsUpdated=".onANTGDAEntryPointRowsUpdated" class="antGdaTable sapUiSizeCompact">
+                                    <table:rowMode>
+                                        <rowmodes:Fixed rowCount="6" />
+                                    </table:rowMode>
+                                    <table:noData>
+                                        <IllustratedMessage illustrationType="sapIllus-NoData" illustrationSize="Small" title="No data" description="Select a Gas Day range and press Go." />
+                                    </table:noData>
+                                    <table:columns>
+                                        <table:Column width="7rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text text="{path: 'epModel>_gasDay', formatter: '.formatDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+
+                                        <!-- Business Location / Location Desc. always show, GROUP row included —
+                                             the GROUP row is the location header (bold + shaded via igmsGroupHdr,
+                                             see onANTGDAEntryPointRowsUpdated), with each contract's own reading
+                                             on the ITEM rows immediately below it, and the netted CM total on
+                                             the BALANCE row — unlike every other column here, which stays blank
+                                             on GROUP since it carries no per-contract value of its own. -->
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Business Location" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{epModel>Location}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <!-- <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Location Desc." />
+                                            <table:template>
+                                                <Text wrapping="false" text="{epModel>LocationDesc}" />
+                                            </table:template>
+                                        </table:Column> -->
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Customer" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>Yycustomer'},{path:'epModel>Location'}], formatter:'.fmtHHCust'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Gas Day" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>YydateGas'}], formatter:'.fmtHHDate'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Contract No" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>YvbelnEp'}], formatter:'.fmtHHStr'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="Begin">
+                                            <Label text="Upload Flag" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>YupdFlagEp'}], formatter:'.fmtHHStr'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="12rem" hAlign="End">
+                                            <Label text="Allocated Qty (MBG)" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>YdpalcqtyEp'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="14rem" hAlign="End">
+                                            <Label text="Allocated Qty (SM3)" />
+                                            <table:template>
+                                                <ObjectNumber number="{parts:[{path:'epModel>_type'},{path:'epModel>YalcsqtyEp'}], formatter:'.fmtHHQty'}" state="{parts:[{path:'epModel>_type'}], formatter:'.fmtHHAllocState'}" />
+                                            </table:template>
+                                        </table:Column>
+
+                                        <table:Column width="11rem" hAlign="End">
+                                            <Label text="CM Meter(SM3)" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>_scadaMeter'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="End">
+                                            <Label text="Avg Wt GCV" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>YyavgGcvCm'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" hAlign="End">
+                                            <Label text="Avg Wt NCV" />
+                                            <table:template>
+                                                <Text wrapping="false" text="{parts:[{path:'epModel>_type'},{path:'epModel>YyavgNcvCm'}], formatter:'.fmtHHQty'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" hAlign="Begin">
+                                            <Label text="Balanced" />
+                                            <table:template>
+                                                <ObjectStatus text="{parts:[{path:'epModel>_type'},{path:'epModel>_showBalance'},{path:'epModel>_balState'},{path:'epModel>_balDiff'}], formatter:'.fmtHHBalText'}" state="{parts:[{path:'epModel>_type'},{path:'epModel>_balState'}], formatter:'.fmtHHBalState'}" icon="{parts:[{path:'epModel>_type'},{path:'epModel>_balState'}], formatter:'.fmtHHBalIcon'}" />
+                                            </table:template>
+                                        </table:Column>
+                                    </table:columns>
+                                </table:Table>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Scheduled Nomination Items -->
+                        <VBox class="antFilterPanel">
+                            <VBox class="AllocTicketTabContent">
+                                <OverflowToolbar>
+                                    <Title text="{= ${allocationModel>/NomCount} ? 'Scheduled Items (' + ${allocationModel>/NomCount} + ')' : 'Scheduled Items' }" level="H4" />
+                                    <ToolbarSeparator />
+                                    <HBox alignItems="Center" class="antLegendBox">
+                                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconSystem sapUiTinyMarginEnd">
+                                            <core:Icon src="sap-icon://it-system" size="0.7rem" color="#44a3d9ff" />
+                                        </FlexBox>
+                                        <Text text="System" class="sapUiSmallMarginEnd antLegendLabel" />
+                                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconManual sapUiTinyMarginEnd">
+                                            <core:Icon src="sap-icon://edit" size="0.7rem" color="#ac9782ff" />
+                                        </FlexBox>
+                                        <Text text="Manual" class="sapUiSmallMarginEnd antLegendLabel" />
+                                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconPortal sapUiTinyMarginEnd">
+                                            <core:Icon src="sap-icon://customer" size="0.7rem" color="#2fcf9aff" />
+                                        </FlexBox>
+                                        <Text text="Portal" class="sapUiSmallMarginEnd antLegendLabel" />
+                                        <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconNoRank sapUiTinyMarginEnd">
+                                            <core:Icon src="sap-icon://warning" size="0.7rem" color="#cc0000" />
+                                        </FlexBox>
+                                        <Text text="No Rank" class="sapUiSmallMarginEnd antLegendLabel" />
+                                        <!-- <FlexBox alignItems="Center" justifyContent="Center" class="antLegendIcon antLegendIconNoRank sapUiTinyMarginEnd">
+                                            <core:Icon src="sap-icon://alert" size="0.7rem" color="#cc0000" />
+                                        </FlexBox> -->
+                                        <!-- <Text text="Business Rule Blocked" class="antLegendLabel" /> -->
+                                    </HBox>
+                                    <ToolbarSpacer />
+                                    <!-- Selection badge — visible only when rows are selected -->
+                                    <ObjectStatus visible="{= !!${allocationModel>/SelectedCount} }" text="{= ${allocationModel>/SelectedCount} + ' selected' }" state="Information" class="sapUiSmallMarginEnd" />
+                                    <Label text="Total DNQ in Meter UOM" design="Bold" class="sapUiSmallMarginEnd" />
+                                    <Input value="{allocationModel>/AggrAdnq}" editable="false" width="12rem" />
+                                    <Text text="{allocationModel>/NomUOM}" class="sapUiSmallMarginEnd" />
+                                    <Label text="Total Metered Qty" design="Bold" class="sapUiSmallMarginEnd" />
+                                    <Input value="{allocationModel>/TotalMeteredQty}" editable="false" width="12rem" />
+                                    <Text text="{allocationModel>/MeteredUOM}" class="sapUiSmallMarginEnd" />
+                                    <Label text="Total Allocated Qty" design="Bold" class="sapUiSmallMarginEnd" />
+                                    <Input value="{allocationModel>/TotalAllocatedQty}" editable="false" width="12rem" />
+                                    <Text text="{allocationModel>/AllocatedUOM}" class="sapUiSmallMarginEnd" />
+                                    <Button id="IdNomItemsRefreshBtn" icon="sap-icon://refresh" type="Transparent" tooltip="Refresh nomination items" press=".onRefreshNomItems" />
+                                    <Button id="IdNomItemsColSettingsBtn" icon="sap-icon://action-settings" type="Transparent" tooltip="Show / Hide Columns" press=".onOpenColumnSettings" />
+                                    <Button id="IdNomItemsExportBtn" icon="sap-icon://excel-attachment" type="Transparent" tooltip="Export to Excel" press=".onExportScheduledItems" />
+                                    <Button id="IdTicketExpandBtn" icon="sap-icon://full-screen" type="Transparent" tooltip="Expand to full screen" press=".onExpandTicketing" />
+                                </OverflowToolbar>
+                                <table:Table id="IdANTTicketItemTbl" busy="{allocationModel>/gdaBusy}" busyIndicatorDelay="0" visibleRowCountMode="Auto" minAutoRowCount="13" rowActionCount="0" selectionMode="None" rowSelectionChange=".onTicketTableRowSelectionChange" rowsUpdated=".onANTRowsUpdated" enableColumnReordering="true" enableColumnFreeze="true" fixedColumnCount="4" columnHeaderHeight="40" rowHeight="32" class="anaTableContainer sapUiSizeCompact">
+                                    <table:noData>
+                                        <IllustratedMessage illustrationType="sapIllus-NoData" illustrationSize="Small" title="No data found" description="Please select Gas Day" />
+                                    </table:noData>
+                                    <table:columns>
+                                        <!-- ── Frozen zone (fixedColumnCount=6): Gasday…Contract No. ───── -->
+                                        <table:Column label="Gas Day" width="9rem" resizable="true" sortProperty="Gasday" filterProperty="Gasday">
+                                            <table:template>
+                                                <Text text="{path:'Gasday',formatter:'.formatDate'}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Customer Type" width="9rem" resizable="true" sortProperty="CustomerKind" filterProperty="CustomerKind">
+                                            <table:template>
+                                                <ObjectStatus text="{CustomerTypeDisplay}" state="{CustomerTypeState}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Partner" width="9rem" resizable="true" sortProperty="Partner" filterProperty="Partner">
+                                            <table:template>
+                                                <Text text="{Partner}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Partner Desc." width="14rem" visible="false" resizable="true" sortProperty="PartnerName" filterProperty="PartnerName">
+                                            <table:template>
+                                                <Text text="{PartnerName}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Location" width="11rem" visible="false" resizable="true" sortProperty="Location" filterProperty="Location">
+                                            <table:template>
+                                                <Text text="{Location}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Delivery Point" width="10rem" resizable="true" sortProperty="DeliveryPoint" filterProperty="DeliveryPoint">
+                                            <table:template>
+                                                <Text text="{DeliveryPoint}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Redelivery Point" width="10rem" resizable="true" sortProperty="RedeliveryPoint" filterProperty="RedeliveryPoint">
+                                            <table:template>
+                                                <Text text="{RedeliveryPoint}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Contract No." width="9rem" resizable="true" sortProperty="Contract" filterProperty="Contract">
+                                            <table:template>
+                                                <Text text="{Contract}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <!-- <table:Column label="CorrespondingDocNo" width="10rem" resizable="true" sortProperty="CorrespondingDocNo" filterProperty="CorrespondingDocNo">
+                                            <table:template>
+                                                <Text text="{CorrespondingDocNo}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column> -->
+                                        <table:Column label="Rank" width="5rem" resizable="true" hAlign="End" sortProperty="Rank" filterProperty="Rank">
+                                            <table:template>
+                                                <Text text="{Rank}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <!-- ── Scrollable columns ─────────────────────────────────────────── -->
+                                        <table:Column label="Contract Type" width="9rem" resizable="true" sortProperty="ContractType" filterProperty="ContractType">
+                                            <table:template>
+                                                <Text text="{ContractType}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Service Type" width="10rem" resizable="true" sortProperty="ServiceType" filterProperty="ServiceType">
+                                            <table:template>
+                                                <Text text="{ServiceType}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Transport System" width="11rem" resizable="true" sortProperty="TransportSystem" filterProperty="TransportSystem">
+                                            <table:template>
+                                                <Text text="{TransportSystem}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Transport Desc." width="14rem" resizable="true" sortProperty="TransportSystemName" filterProperty="TransportSystemName">
+                                            <table:template>
+                                                <Text text="{TransportSystemName}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Ticket Key" width="9rem" resizable="true" sortProperty="TicketKeyDisplay" filterProperty="TicketKeyDisplay">
+                                            <table:template>
+                                                <ObjectStatus
+                                                    text="{TicketKeyDisplay}"
+                                                    active="true"
+                                                    visible="{= !!${TicketKeyDisplay} }"
+                                                    press=".onTicketKeyPress"
+                                                    state="{parts:[{path:'TicketPurpose'},{path:'TicketStatus'}], formatter:'.fmtTicketKeyState'}"
+                                                    icon="{parts:[{path:'TicketPurpose'},{path:'TicketStatus'}], formatter:'.fmtTicketKeyIcon'}"
+                                                    tooltip="{parts:[{path:'TicketPurpose'},{path:'TicketStatus'}], formatter:'.fmtTicketKeyTooltip'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Ticket Item" width="7rem" resizable="true" sortProperty="TicketItem" filterProperty="TicketItem">
+                                            <table:template>
+                                                <Text text="{TicketItem}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Ticket Purpose" width="9rem" visible="false" resizable="true" sortProperty="TicketPurpose" filterProperty="TicketPurpose">
+                                            <table:template>
+                                                <Text text="{TicketPurpose}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Ticket Status" width="9rem" visible="false" resizable="true" sortProperty="TicketStatus" filterProperty="TicketStatus">
+                                            <table:template>
+                                                <Text text="{TicketStatus}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Ticket Sub-Status" width="10rem" visible="false" resizable="true" sortProperty="TicketItemSubStatus" filterProperty="TicketItemSubStatus">
+                                            <table:template>
+                                                <Text text="{TicketItemSubStatus}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Nom Key" width="9rem" resizable="true" sortProperty="NominationKey" filterProperty="NominationKey">
+                                            <table:template>
+                                                <Link
+                                                    text="{NominationKey}"
+                                                    wrapping="false"
+                                                    visible="{path: 'NominationKey', formatter: '.formatHasValue'}"
+                                                    press=".onNomKeyPress"
+                                                    tooltip="View all tickets for this nomination item" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Nom Item" width="8rem" resizable="true" sortProperty="NominationItem" filterProperty="NominationItem">
+                                            <table:template>
+                                                <Text text="{NominationItem}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Material" width="9rem" resizable="true" sortProperty="Material" filterProperty="Material">
+                                            <table:template>
+                                                <Text text="{Material}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Proposed DNQ Qty" width="11rem" resizable="true" hAlign="End" sortProperty="ProposedDNQ" filterProperty="ProposedDNQ">
+                                            <table:template>
+                                                <Text text="{path:'ProposedDNQ',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="UOM" width="6rem" resizable="true" sortProperty="UOM" filterProperty="UOM">
+                                            <table:template>
+                                                <Text text="{UOM}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="DNQ in Meter UOM" width="12rem" resizable="true" hAlign="End" sortProperty="ConversionQty" filterProperty="ConversionQty">
+                                            <table:template>
+                                                <Text text="{path:'ConversionQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Conv. UOM" width="7rem" resizable="true" sortProperty="ConversionUOM" filterProperty="ConversionUOM">
+                                            <table:template>
+                                                <Text text="{ConversionUOM}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Saved Alloc Qty" width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="SavedAllocatedQty" filterProperty="SavedAllocatedQty">
+                                            <table:template>
+                                                <Text text="{path:'SavedAllocatedQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Saved Qty UOM" width="8rem" visible="false" resizable="true" sortProperty="SavedAllocatedUOM" filterProperty="SavedAllocatedUOM">
+                                            <table:template>
+                                                <Text text="{SavedAllocatedUOM}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Allocated Qty" width="11rem" resizable="true" hAlign="End" sortProperty="AllocatedQty" filterProperty="AllocatedQty">
+                                            <table:template>
+                                                <Input value="{path:'AllocatedQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3},constraints:{precision:15,scale:3}}" textAlign="Right" editable="false" class="{path:'LocationType', formatter:'.fmtAllocQtyClass'}" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Alloc. UOM" width="8rem" resizable="true" sortProperty="AllocUOM" filterProperty="AllocUOM">
+                                            <table:template>
+                                                <Text text="{AllocUOM}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Alloc. Qty (Contract UoM)" width="12rem" resizable="true" hAlign="End" sortProperty="AllocatedQtyMBG" filterProperty="AllocatedQtyMBG">
+                                            <table:template>
+                                                <Text text="{path:'AllocatedQtyMBG',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <!-- ── Hidden columns (toggle via column settings) ───────────────── -->
+                                        <table:Column label="Location Desc." width="14rem" visible="false" resizable="true" sortProperty="LocationDesc" filterProperty="LocationDesc">
+                                            <table:template>
+                                                <Text text="{LocationDesc}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Contract Type" width="9rem" visible="false" resizable="true" sortProperty="ContractType" filterProperty="ContractType">
+                                            <table:template>
+                                                <Text text="{ContractType}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Material Name" width="12rem" visible="false" resizable="true" sortProperty="MaterialName" filterProperty="MaterialName">
+                                            <table:template>
+                                                <Text text="{MaterialName}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Avg Wt GCV" width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="AVG_WT_GCV" filterProperty="AVG_WT_GCV">
+                                            <table:template>
+                                                <Text text="{path:'AVG_WT_GCV',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Avg Wt NCV" width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="AVG_WT_NCV" filterProperty="AVG_WT_NCV">
+                                            <table:template>
+                                                <Text text="{path:'AVG_WT_NCV',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Over Drawl (GSA)" width="11rem" resizable="true" hAlign="End" sortProperty="OverDrawlGSA" filterProperty="OverDrawlGSA" autoResizable="true">
+                                            <table:template>
+                                                <Text text="{path:'OverDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" resizable="true" hAlign="End" sortProperty="AuthOverDrawlGSA" filterProperty="AuthOverDrawlGSA" autoResizable="true">
+                                            <Label text="Authorized Over draw" tooltip="Authorized Over drawl(GSA)" />
+                                            <table:template>
+                                                <Text text="{path:'AuthOverDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Unauth. Over Drawl (GSA)" width="13rem" resizable="true" hAlign="End" sortProperty="UnauthOverDrawlGSA" filterProperty="UnauthOverDrawlGSA" autoResizable="true">
+                                            <table:template>
+                                                <Text text="{path:'UnauthOverDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Under Drawl (GSA)" width="11rem" resizable="true" hAlign="End" sortProperty="UnderDrawlGSA" filterProperty="UnderDrawlGSA" autoResizable="true">
+                                            <table:template>
+                                                <Text text="{path:'UnderDrawlGSA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Auth. Overrun (GTA)" width="12rem" resizable="true" hAlign="End" sortProperty="AuthOverrunGTA" filterProperty="AuthOverrunGTA" autoResizable="true">
+                                            <table:template>
+                                                <Text text="{path:'AuthOverrunGTA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column label="Unauth. Overrun (GTA)" width="13rem" resizable="true" hAlign="End" sortProperty="UnauthOverrunGTA" filterProperty="UnauthOverrunGTA" autoResizable="true">
+                                            <table:template>
+                                                <Text text="{path:'UnauthOverrunGTA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+
+                                        <!-- ── OIJNOMI fields with no dedicated visible column (hidden by default) ── -->
+                                        <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="OverrunGTA" filterProperty="OverrunGTA">
+                                            <Label text="Overrun(GTA)" tooltip="Overrun(GTA)1" />
+                                            <table:template>
+                                                <Text text="{path:'OverrunGTA',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="DImbQty" filterProperty="DImbQty">
+                                            <Label text="Daily Imbalance(GTA)" />
+                                            <table:template>
+                                                <Text text="{path:'DImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="CNomQty" filterProperty="CNomQty">
+                                            <Label text="Contractual Nominate" tooltip="Contractual Nominated qty" />
+                                            <table:template>
+                                                <Text text="{path:'CNomQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" visible="false" resizable="true" sortProperty="CNomUOM" filterProperty="CNomUOM">
+                                            <Label text="Cont Nom. UOM" tooltip="Contractual Nominated UOM" />
+                                            <table:template>
+                                                <Text text="{CNomUOM}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="8rem" visible="false" resizable="true" sortProperty="OijStatus" filterProperty="OijStatus">
+                                            <Label text="Status" />
+                                            <table:template>
+                                                <Text text="{OijStatus}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+
+                                        <!-- ── OIJNOMI imbalance/adjustment fields (hidden by default) ───── -->
+                                        <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="DPIQty" filterProperty="DPIQty">
+                                            <Label text="DPI Quantity" tooltip="Daily Positive Imbalance Quantity1" />
+                                            <table:template>
+                                                <Text text="{path:'DPIQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="DNIQty" filterProperty="DNIQty">
+                                            <Label text="DNI Quantity" tooltip="Daily Negative Imbalance Quantity1" />
+                                            <table:template>
+                                                <Text text="{path:'DNIQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="CumImbQty" filterProperty="CumImbQty">
+                                            <Label text="Cumulative Imb Qty" tooltip="Cumulative Imbalance Quantity" />
+                                            <table:template>
+                                                <Text text="{path:'CumImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="ChrgImbQty" filterProperty="ChrgImbQty">
+                                            <Label text="Chrg Imb Qty" tooltip="Chargable Imbalance Quantity" />
+                                            <table:template>
+                                                <Text text="{path:'ChrgImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="PosCumImbQty" filterProperty="PosCumImbQty">
+                                            <Label text="Cum +ve Imb Qty" tooltip="Cumulative Imbalance Quantity" />
+                                            <table:template>
+                                                <Text text="{path:'PosCumImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="NegCumImbQty" filterProperty="NegCumImbQty">
+                                            <Label text="Cum -ve Imb Qty" tooltip="Cumulative Imbalance Quantity" />
+                                            <table:template>
+                                                <Text text="{path:'NegCumImbQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="LiqAdjustQty" filterProperty="LiqAdjustQty">
+                                            <Label text="Liq. Adjust Qty" tooltip="Liquidated Damages Adjusted qty" />
+                                            <table:template>
+                                                <Text text="{path:'LiqAdjustQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="LiqDamDiscQty" filterProperty="LiqDamDiscQty">
+                                            <Label text="Liq. Dam. Disc Qty" tooltip="Liquidated Damaages discount" />
+                                            <table:template>
+                                                <Text text="{path:'LiqDamDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="SellOrPayAdjQty" filterProperty="SellOrPayAdjQty">
+                                            <Label text="Sell or Pay Adj Qty" tooltip="Sell or Pay" />
+                                            <table:template>
+                                                <Text text="{path:'SellOrPayAdjQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="SellOrPayDiscQty" filterProperty="SellOrPayDiscQty">
+                                            <Label text="Sell or Pay Disc qty" tooltip="Sell or Pay discounted qty" />
+                                            <table:template>
+                                                <Text text="{path:'SellOrPayDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="11rem" visible="false" resizable="true" hAlign="End" sortProperty="SellersSFAdjQty" filterProperty="SellersSFAdjQty">
+                                            <Label text="Sellers SF Adj Qty" tooltip="Sell or Pay" />
+                                            <table:template>
+                                                <Text text="{path:'SellersSFAdjQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="8rem" visible="false" resizable="true" hAlign="End" sortProperty="SSFDiscQty" filterProperty="SSFDiscQty">
+                                            <Label text="SSF disc" tooltip="Liquidated Damaages discount" />
+                                            <table:template>
+                                                <Text text="{path:'SSFDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="TakeOrPayAdjQty" filterProperty="TakeOrPayAdjQty">
+                                            <Label text="Take or Pay Adj Qty" tooltip="Sell or Pay" />
+                                            <table:template>
+                                                <Text text="{path:'TakeOrPayAdjQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="12rem" visible="false" resizable="true" hAlign="End" sortProperty="TakeOrPayDiscQty" filterProperty="TakeOrPayDiscQty">
+                                            <Label text="Take or Pay Disc qty" tooltip="Sell or Pay discounted qty" />
+                                            <table:template>
+                                                <Text text="{path:'TakeOrPayDiscQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" visible="false" resizable="true" sortProperty="GTAAdjust" filterProperty="GTAAdjust">
+                                            <Label text="SOP/LD adjusted" tooltip="GTA adjust" />
+                                            <table:template>
+                                                <Text text="{= ${GTAAdjust} ? 'Yes' : 'No' }" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" visible="false" resizable="true" sortProperty="GSAAdjust" filterProperty="GSAAdjust">
+                                            <Label text="TOP/SSF Adjusted" tooltip="GSA TOP/SSF adjsuted" />
+                                            <table:template>
+                                                <Text text="{= ${GSAAdjust} ? 'Yes' : 'No' }" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="10rem" visible="false" resizable="true" hAlign="End" sortProperty="GujDNQQty" filterProperty="GujDNQQty">
+                                            <Label text="Qty for Gujrat DNQ" />
+                                            <table:template>
+                                                <Text text="{path:'GujDNQQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="9rem" visible="false" resizable="true" sortProperty="GujDNQUOM" filterProperty="GujDNQUOM">
+                                            <Label text="UOM for Gujrat DNQ" />
+                                            <table:template>
+                                                <Text text="{GujDNQUOM}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                        <table:Column width="8rem" visible="false" resizable="true" hAlign="End" sortProperty="DDSQty" filterProperty="DDSQty">
+                                            <Label text="DDS Qty" tooltip="Daily DDS Imbalance Quantity1" />
+                                            <table:template>
+                                                <Text text="{path:'DDSQty',type:'sap.ui.model.odata.type.Decimal',formatOptions:{groupingEnabled:true,minFractionDigits:3,maxFractionDigits:3}}" wrapping="false" />
+                                            </table:template>
+                                        </table:Column>
+                                    </table:columns>
+                                </table:Table>
+                            </VBox>
+                            <!-- STREAM-WISE REMOVED: stream detail drill-down dropped
+                            <table:Table id="IdANTLocationStreamsTable" rows="{locationStreamsModel>/}" .../>
+                            -->
+                        </VBox>
+
+                    </VBox>
+                </layout:flexContent>
+
+            </layout:FixFlex>
+        </content>
+    </Page>
+
+</mvc:View>

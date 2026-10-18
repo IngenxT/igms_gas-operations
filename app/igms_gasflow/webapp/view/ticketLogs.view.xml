@@ -1,0 +1,249 @@
+<mvc:View xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:tnt="sap.tnt"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="com.ingenx.igmsgasflow.controller.ticketLogs"
+    displayBlock="true">
+
+    <Page id="IdTcktLogsPage" showHeader="false" enableScrolling="false">
+
+        <subHeader>
+            <tnt:ToolHeader id="IdTcktLogsToolHeader">
+                <Button id="IdTcktLogsBackToAllocBtn"
+                    icon="sap-icon://nav-back"
+                    text="Back to Allocation &amp; Ticketing"
+                    type="Transparent"
+                    visible="false"
+                    press="onNavBackToAllocation"
+                    class="sapUiSmallMarginEnd" />
+                <Title id="IdTcktLogsTitle" text="{i18n>ticLogTitle}" level="H3" />
+            </tnt:ToolHeader>
+        </subHeader>
+
+        <content>
+            <layout:FixFlex id="IdTcktLogsFixFlex" vertical="true" minFlexSize="200">
+
+                <!-- Filter Panel — same pattern as BalancingScheduling (confirmScheduleNomination.view.xml)
+                     IdCSNFilterPanel: expandable="false", no header, plain top margin -->
+                <layout:fixContent>
+                  <VBox>
+                    <Panel id="IdANTFilterPanel" expandable="false" expanded="true" class="sapUiSmallMarginTop">
+                        <content>
+                            <FlexBox justifyContent="SpaceBetween" alignItems="End" wrap="Wrap"
+                                class="sapUiSmallMarginTop sapUiSmallMarginBottom sapUiSmallMarginBegin sapUiSmallMarginEnd">
+
+                                <HBox alignItems="End" wrap="Wrap">
+
+                                    <!-- Gasday Range — primary fetch filter, same tier as Execution Range: either
+                                         one alone is enough to press Go (see onPressGoTicketLogs), neither is
+                                         required together. Always visible, not gated behind the first load. -->
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="{i18n>filGasdayRange}" design="Bold" />
+                                        <DateRangeSelection id="IdTcktLogsGasdayRange" placeholder="{i18n>ticLogDate}" width="15rem" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" />
+                                    </FlexBox>
+
+                                    <!-- Execution Range — primary fetch filter, same tier as Gasday Range. -->
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="{i18n>filExecRange}" design="Bold" />
+                                        <DateRangeSelection id="IdTcktLogsDateRange" placeholder="{i18n>ticLogDate}" width="15rem" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" />
+                                    </FlexBox>
+
+                                    <!-- Status — hidden until the first successful load, like the rest of the refinement filters -->
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                        visible="{viewModel>/filtersVisible}">
+                                        <Label text="{i18n>filStatus}" design="Bold" />
+                                        <MultiComboBox id="IdTcktLogsStatusFilter"
+                                            width="14rem"
+                                            selectedKeys="S,W,E,P,N"
+                                            selectionChange="onStatusFilterChange">
+                                            <core:Item key="S" text="{i18n>statusSuccess}" />
+                                            <core:Item key="W" text="{i18n>statusWarning}" />
+                                            <core:Item key="E" text="{i18n>statusError}" />
+                                            <core:Item key="P" text="{i18n>statusPartial}" />
+                                            <core:Item key="N" text="{i18n>statusNotCompleted}" />
+                                        </MultiComboBox>
+                                    </FlexBox>
+
+                                    <!-- Nomination Key — always visible: usable before the first load, and on
+                                         its own (no date range needed), see onPressGoTicketLogs. Combines
+                                         with Ticket Key (AND). -->
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="{i18n>colLogNomKey}" design="Bold" />
+                                        <Input id="IdTcktLogsNomKeyFilter"
+                                            width="12rem"
+                                            showValueHelp="true"
+                                            valueHelpRequest="onNomKeyValueHelp"
+                                            change="onNomKeyFilterChange"
+                                            placeholder="{i18n>phSearchNomKey}" />
+                                    </FlexBox>
+
+                                    <!-- Ticket Key -->
+                                    <FlexBox direction="Column" class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                                        <Label text="{i18n>colLogTicketKey}" design="Bold" />
+                                        <Input id="IdTcktLogsTicketKeyFilter"
+                                            width="12rem"
+                                            showValueHelp="true"
+                                            valueHelpRequest="onTicketKeyValueHelp"
+                                            change="onTicketKeyFilterChange"
+                                            placeholder="{i18n>phSearchTicketKey}" />
+                                    </FlexBox>
+
+                                </HBox>
+
+                                <!-- Go / Clear All — right-aligned -->
+                                <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <Button id="IdTcktLogsGoBtn" text="{i18n>btnGo}" type="Emphasized"
+                                        press="onPressGoTicketLogs" class="sapUiTinyMarginEnd" />
+                                    <Button id="IdTcktLogsClearAllBtn" text="{i18n>btnClearAll}"
+                                        press="onClearAllFilters" />
+                                </HBox>
+
+                            </FlexBox>
+                        </content>
+                    </Panel>
+
+                    <MessageStrip id="IdTcktLogsFilterSummary"
+                        type="Information"
+                        showIcon="true"
+                        showCloseButton="true"
+                        close="onClearKeyFilterSummary"
+                        text="{viewModel>/filterSummaryText}"
+                        visible="{viewModel>/hasKeyFilter}"
+                        class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                  </VBox>
+                </layout:fixContent>
+
+                <!-- sap.ui.table.Table -->
+                <layout:flexContent >
+                    <VBox class="antFilterPanel bnsTableContainer" height="97%" width="99%">
+                        <table:Table id="IdTcktLogsMainTable"
+                        visibleRowCountMode="Auto"
+                        minAutoRowCount="9"
+                        selectionMode="None"
+                        alternateRowColors="true"
+                        enableBusyIndicator="true"
+                        threshold="100"
+                        scrollThreshold="150"
+                        cellClick="onRowPress"
+                        class="sapUiSmallMarginTop">
+                        <table:noData>
+                                    <IllustratedMessage id="IdTcktLogsTableIllustratedMessage" illustrationSize="Small" busyIndicatorDelay="1000" illustrationType="sapIllus-NoData" title="No data found" description="Please select a Gasday Range or an Execution Range." />
+                                </table:noData>
+
+                        <table:extension>
+                            <Toolbar>
+                                <Title id="IdTcktLogsTableTitle"
+                                    text="Ticket Execution Logs"
+                                    level="H3" />
+                                <ToolbarSpacer />
+                                <Button
+                                    id="IdTcktLogsColumnSettingsBtn"
+                                    icon="sap-icon://action-settings"
+                                    type="Transparent"
+                                    tooltip="{i18n>btnColumnSettings}"
+                                    press="onOpenColumnSettings" />
+                                <Button
+                                    id="IdTcktLogsRefreshBtn"
+                                    icon="sap-icon://refresh"
+                                    type="Transparent"
+                                    tooltip="Refresh"
+                                    press="onRefreshTicketLogs" />
+                            </Toolbar>
+                        </table:extension>
+
+                        <table:columns>
+                            <!-- Gasday -->
+                            <table:Column id="IdTcktLogsGasdayCol" width="8rem" sortProperty="Gasday" filterProperty="Gasday">
+                                <table:label><Label text="{i18n>colGasday}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Text text="{path:'Gasday', type:'sap.ui.model.odata.type.Date', formatOptions:{pattern:'dd-MM-yyyy', UTC:true}}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Nomination Key — CAP-local virtual field; sort/filter applied in memory by the ticketLogs READ handler -->
+                            <table:Column id="IdTcktLogsNomtkCol" width="10rem" hAlign="End" sortProperty="Nomtk" filterProperty="Nomtk">
+                                <table:label><Label text="{i18n>colLogNomKey}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Link
+                                        text="{path: 'Nomtk', formatter: '.formatKeyNoLeadingZeros'}"
+                                        wrapping="false"
+                                        visible="{= !!${Nomtk} }"
+                                        press=".onLogNomKeyPress"
+                                        tooltip="Show all tickets for this nomination" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Nomination Item — CAP-local virtual field -->
+                            <table:Column id="IdTcktLogsNomitCol" width="9rem" hAlign="End">
+                                <table:label><Label text="{i18n>colLogNomItem}" design="Bold" /></table:label>
+                                <table:template><Text text="{Nomit}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Ticket Key — CAP-local virtual field; sort/filter applied in memory by the ticketLogs READ handler -->
+                            <table:Column id="IdTcktLogsTicketKeyCol" width="10rem" sortProperty="TicketKey" filterProperty="TicketKey">
+                                <table:label><Label text="{i18n>colLogTicketKey}" design="Bold" /></table:label>
+                                <table:template><Text text="{path: 'TicketKey', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Ticket Item — CAP-local virtual field -->
+                            <table:Column id="IdTcktLogsTicketItemCol" width="8rem" hAlign="End">
+                                <table:label><Label text="{i18n>colLogTicketItem}" design="Bold" /></table:label>
+                                <table:template><Text text="{TicketItem}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Status -->
+                            <table:Column id="IdTcktLogsExecStatusCol" width="9rem" sortProperty="ExecStatus" filterProperty="ExecStatus">
+                                <table:label><Label text="{i18n>status}" design="Bold" /></table:label>
+                                <table:template>
+                                    <ObjectStatus
+                                        text="{path: 'ExecStatus', formatter: '.formatStatusText'}"
+                                        state="{path: 'ExecStatus', formatter: '.formatStatusState'}"
+                                        icon="{path: 'ExecStatus', formatter: '.formatStatusIcon'}" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Execution Date -->
+                            <table:Column id="IdTcktLogsExecDateCol" width="8rem" sortProperty="ExecDate" filterProperty="ExecDate"
+                                filterType="\{type: 'sap.ui.model.odata.type.Date', formatOptions: \{pattern: 'dd-MM-yyyy'\}\}">
+                                <table:label><Label text="{i18n>colExecDate}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Text text="{path:'ExecDate', type:'sap.ui.model.odata.type.Date', formatOptions:{pattern:'dd-MM-yyyy', UTC:true}}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Execution Time -->
+                            <table:Column id="IdTcktLogsExecTimeCol" width="8rem" sortProperty="ExecTime">
+                                <table:label><Label text="{i18n>colExecTime}" design="Bold" /></table:label>
+                                <table:template><Text text="{ExecTime}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- User -->
+                            <table:Column id="IdTcktLogsExecUserCol" width="8rem" sortProperty="ExecUser" filterProperty="ExecUser">
+                                <table:label><Label text="{i18n>colExecUser}" design="Bold" /></table:label>
+                                <table:template><Text text="{ExecUser}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Completed At -->
+                            <table:Column id="IdTcktLogsCompletedAtCol" width="12rem" sortProperty="CompletedAt">
+                                <table:label><Label text="{i18n>colCompAt}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Text text="{path:'CompletedAt', type:'sap.ui.model.odata.type.DateTimeOffset', formatOptions:{pattern:'dd-MM-yyyy HH:mm:ss'}}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Processing Time -->
+                            <table:Column id="IdTcktLogsProcessingTimeCol" width="12rem" hAlign="Center" sortProperty="ProcessingTime">
+                                <table:label><Label text="{i18n>colProcTime}" design="Bold" /></table:label>
+                                <table:template><ObjectNumber number="{ProcessingTime}" unit="sec" /></table:template>
+                            </table:Column>
+                        </table:columns>
+                    </table:Table>
+                    </VBox>
+                </layout:flexContent>
+
+            </layout:FixFlex>
+        </content>
+    </Page>
+</mvc:View>

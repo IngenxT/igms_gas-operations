@@ -1,0 +1,9 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Popover id="IdGdaOverAllocPopover" placement="Bottom" contentWidth="22rem">
+        <VBox class="sapUiSmallMargin">
+            <Text id="IdGdaOverAllocText" wrapping="true" />
+        </VBox>
+    </Popover>
+</core:FragmentDefinition>

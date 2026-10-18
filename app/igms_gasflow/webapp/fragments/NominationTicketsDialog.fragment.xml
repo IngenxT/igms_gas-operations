@@ -1,0 +1,64 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <!-- Allocation & Ticketing — tickets list (ticketDetail.js).
+         Nom Key link: every ticket behind the nomination item (TicketDetailSet,
+         Nomtk+Nomit). Ticket Key link: that ticket's own execution records.
+         A ticket row opens the shared TicketExecDetailDialog (execution logs). -->
+    <Dialog
+        id="IdNomTicketsDialog"
+        resizable="true"
+        draggable="true"
+        contentWidth="64rem"
+        contentHeight="26rem"
+        showHeader="false"
+        verticalScrolling="false">
+
+        <content>
+            <!-- ── Tickets list ─────────────────────────────────────────── -->
+            <Page
+                id="IdNomTicketsListPage"
+                title="{= ${nomTicketsModel>/fromTicketKey}
+                    ? 'Ticket ' + ${path: 'nomTicketsModel>/selected/TicketKey', formatter: '.formatKeyNoLeadingZeros'} + ' / ' + ${path: 'nomTicketsModel>/selected/TicketItem', formatter: '.formatKeyNoLeadingZeros'}
+                    : 'Tickets — Nom. ' + ${path: 'nomTicketsModel>/selected/Nomtk', formatter: '.formatKeyNoLeadingZeros'} + ' / ' + ${path: 'nomTicketsModel>/selected/Nomit', formatter: '.formatKeyNoLeadingZeros'} }"
+                titleLevel="H4"
+                showNavButton="false">
+                <headerContent>
+                    <Button icon="sap-icon://decline" type="Transparent" tooltip="Close" press=".onCloseNomTicketsDialog" />
+                </headerContent>
+                <Table items="{nomTicketsModel>/selected/tickets}" growing="true" growingThreshold="50" class="sapUiSizeCompact">
+                    <noData>
+                        <IllustratedMessage illustrationSize="ExtraSmall" illustrationType="sapIllus-NoData" title="No tickets found" />
+                    </noData>
+                    <columns>
+                        <Column><Text text="Ticket Key" /></Column>
+                        <Column><Text text="Ticket Item" /></Column>
+                        <Column><Text text="Version" /></Column>
+                        <Column><Text text="Purpose" /></Column>
+                        <Column><Text text="Status" /></Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Message" /></Column>
+                        <Column><Text text="Last Changed" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onNomTicketPress">
+                            <cells>
+                                <Text text="{path: 'nomTicketsModel>TicketKey', formatter: '.formatKeyNoLeadingZeros'}" />
+                                <Text text="{path: 'nomTicketsModel>TicketItem', formatter: '.formatKeyNoLeadingZeros'}" />
+                                <Text text="{path: 'nomTicketsModel>TicketVersion', formatter: '.formatKeyNoLeadingZeros'}" />
+                                <Text text="{nomTicketsModel>Purpose}" />
+                                <ObjectStatus
+                                    text= "{path: 'nomTicketsModel>ProcessStatus', formatter: '.formatStatusText'}"
+                                    state="{path: 'nomTicketsModel>ProcessStatus', formatter: '.formatStatusState'}"
+                                    icon= "{path: 'nomTicketsModel>ProcessStatus', formatter: '.formatStatusIcon'}" />
+                                <Text text="{nomTicketsModel>MessageSummary}" maxLines="2" />
+                                <Text text="{nomTicketsModel>_lastChanged}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Page>
+
+        </content>
+    </Dialog>
+</core:FragmentDefinition>

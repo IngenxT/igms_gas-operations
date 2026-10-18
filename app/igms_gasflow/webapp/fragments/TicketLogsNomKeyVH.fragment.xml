@@ -1,0 +1,26 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <!-- Server-driven search + paging against the real xGMSxTKT_EXEC_TICKETS entity —
+         never the whole ticket log set loaded client-side. Duplicate Nomtk values across
+         ticket items are expected (no server-side DISTINCT over this remote V2 service);
+         any row for the chosen key resolves to the same underlying ExecId narrowing. -->
+    <SelectDialog
+        id="IdTcktLogsNomKeyDialog"
+        title="{i18n>dlgTitleNomKey}"
+        noDataText="{i18n>noDataText}"
+        growing="true"
+        growingThreshold="30"
+        confirm="onConfirmNomKeyVH"
+        liveChange="onSearchNomKeyVH"
+        items="{
+            path: '/xGMSxTKT_EXEC_TICKETS',
+            parameters: { $select: 'ExecId,Nomtk,TicketKey', $$groupId: '$direct' }
+        }">
+
+        <StandardListItem title="{Nomtk}" description="{TicketKey}" />
+
+    </SelectDialog>
+
+</core:FragmentDefinition>

@@ -1,0 +1,221 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table">
+
+    <Dialog
+        id="IdTicketExecDetailDialog"
+        title="Ticket Execution Detail"
+        resizable="true"
+        draggable="true"
+        contentWidth="72rem"
+        contentHeight="28rem">
+
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Title text="Ticket Execution Detail" level="H4" />
+                </contentLeft>
+                <contentRight>
+                    <Button icon="sap-icon://decline" type="Transparent" tooltip="Close" press=".onCloseTicketDetailDialog" />
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <content>
+
+            <!-- ── Summary strip ──────────────────────────────────────────────── -->
+            <FlexBox
+                wrap="Wrap"
+                alignItems="Center"
+                class="sapUiSmallMarginTop sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom">
+
+                <ObjectAttribute title="Ticket Key"     text="{path: 'ticketDetailModel>/TicketKey', formatter: '.formatKeyNoLeadingZeros'}"  class="sapUiSmallMarginEnd" />
+                <ObjectAttribute title="Ticket Item"    text="{ticketDetailModel>/TicketItem}" class="sapUiSmallMarginEnd" />
+                <ObjectAttribute title="Version"        text="{path: 'ticketDetailModel>/TicketVersion', formatter: '.formatKeyNoLeadingZeros'}" visible="{= !!${ticketDetailModel>/TicketVersion} }" class="sapUiSmallMarginEnd" />
+                <ObjectAttribute title="Purpose"        text="{ticketDetailModel>/Purpose}" visible="{= !!${ticketDetailModel>/Purpose} }" class="sapUiSmallMarginEnd" />
+                <ObjectAttribute title="Nomination Key" text="{path: 'ticketDetailModel>/Nomtk', formatter: '.formatKeyNoLeadingZeros'}"      class="sapUiSmallMarginEnd" />
+                <ObjectAttribute title="Nom. Item"      text="{ticketDetailModel>/Nomit}"      class="sapUiSmallMarginEnd" />
+                <ObjectStatus
+                    title="Status"
+                    text= "{path: 'ticketDetailModel>/ProcessStatus', formatter: '.formatStatusText'}"
+                    state="{path: 'ticketDetailModel>/ProcessStatus', formatter: '.formatStatusState'}"
+                    icon= "{path: 'ticketDetailModel>/ProcessStatus', formatter: '.formatStatusIcon'}"
+                    class="sapUiSmallMarginEnd" />
+                <ObjectAttribute
+                    title="Message"
+                    text="{ticketDetailModel>/MessageSummary}"
+                    visible="{path: 'ticketDetailModel>/MessageSummary', formatter: '.formatHasValue'}" />
+
+            </FlexBox>
+
+            <!-- ── Tabs ───────────────────────────────────────────────────────── -->
+            <!-- Hidden entirely when neither tab has anything to show (e.g. a Success
+                 row with no generated documents and no errors) — the summary strip's
+                 own Message field above already carries the real information then. -->
+            <IconTabBar
+                id="IdTicketDetailTabBar"
+                stretchContentHeight="false"
+                visible="{parts: [
+                    {path: 'ticketDetailModel>/docflowCount'},
+                    {path: 'ticketDetailModel>/errlogCount'}
+                ], formatter: '.formatTabBarVisible'}"
+                class="sapUiNoContentPadding sapUiSmallMarginBegin sapUiSmallMarginEnd">
+                <items>
+
+                    <!-- Generated Documents (TO_DOCFLOW) — visible whenever this ticket
+                         row actually returned document-flow rows, independent of
+                         ProcessStatus. -->
+                    <IconTabFilter
+                        id="IdTicketDocflowTab"
+                        key="docflow"
+                        icon="sap-icon://document"
+                        text="Generated Documents"
+                        count="{ticketDetailModel>/docflowCount}"
+                        visible="{path: 'ticketDetailModel>/docflowCount', formatter: '.formatDocflowTabVisible'}">
+
+                        <table:Table
+                            id="IdTicketDocflowTable"
+                            rows="{ticketDetailModel>/to_docflow}"
+                            visibleRowCountMode="Fixed"
+                            visibleRowCount="5"
+                            selectionMode="None"
+                            alternateRowColors="true"
+                            class="sapUiSizeCompact">
+
+                            <table:noData>
+                                <IllustratedMessage
+                                    illustrationSize="ExtraSmall"
+                                    illustrationType="sapIllus-NoData"
+                                    title="No documents generated" />
+                            </table:noData>
+
+                            <table:columns>
+                                <table:Column width="5rem" hAlign="End">
+                                    <table:label><Label text="Seq" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>SequenceNo}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <table:Column width="10rem">
+                                    <table:label><Label text="Nomination Key" design="Bold" /></table:label>
+                                    <table:template><Text text="{path: 'ticketDetailModel>Nomtk', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <!-- Commented out per request — Nom. Item
+                                <table:Column width="8rem" hAlign="End">
+                                    <table:label><Label text="Nom. Item" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>Nomit}" wrapping="false" /></table:template>
+                                </table:Column>
+                                -->
+                                <table:Column width="7rem">
+                                    <table:label><Label text="Ref. Document" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>RefDoc}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <!-- Commented out per request — Ref. Item
+                                <table:Column width="7rem" hAlign="End">
+                                    <table:label><Label text="Ref. Item" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>RefDocItem}" wrapping="false" /></table:template>
+                                </table:Column>
+                                -->
+                                <table:Column width="6rem" hAlign="End">
+                                    <table:label><Label text="Mat. Year" design="Bold" /></table:label>
+                                    <table:template>
+                                        <Text text="{path: 'ticketDetailModel>MatYear', formatter: '.formatMatYear'}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="auto" minWidth="12rem">
+                                    <table:label><Label text="Doc Description" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>DocDescription}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <!-- Commented out per request — Reversal
+                                <table:Column width="7rem" hAlign="Center">
+                                    <table:label><Label text="Reversal" design="Bold" /></table:label>
+                                    <table:template>
+                                        <ObjectStatus
+                                            text= "{path: 'ticketDetailModel>RevDoc', formatter: '.formatBoolText'}"
+                                            state="{path: 'ticketDetailModel>RevDoc', formatter: '.formatReversalState'}" />
+                                    </table:template>
+                                </table:Column>
+                                -->
+                            </table:columns>
+                        </table:Table>
+
+                    </IconTabFilter>
+
+                    <!-- Error Log (TO_ERRLOG) — visible whenever this ticket row
+                         actually returned error-log rows, independent of ProcessStatus. -->
+                    <IconTabFilter
+                        id="IdTicketErrlogTab"
+                        key="errlog"
+                        icon="sap-icon://error"
+                        iconColor="Negative"
+                        text="Error Log"
+                        count="{ticketDetailModel>/errlogCount}"
+                        visible="{path: 'ticketDetailModel>/errlogCount', formatter: '.formatErrlogTabVisible'}">
+
+                        <table:Table
+                            id="IdTicketErrlogTable"
+                            rows="{ticketDetailModel>/to_errlog_errors}"
+                            visibleRowCountMode="Fixed"
+                            visibleRowCount="5"
+                            selectionMode="None"
+                            alternateRowColors="true"
+                            class="sapUiSizeCompact">
+
+                            <table:noData>
+                                <IllustratedMessage
+                                    illustrationSize="ExtraSmall"
+                                    illustrationType="sapIllus-NoEntries"
+                                    title="No errors recorded" />
+                            </table:noData>
+
+                            <table:columns>
+                                <table:Column width="5rem" hAlign="End">
+                                    <table:label><Label text="Seq" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>SequenceNo}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <table:Column width="6rem" hAlign="Center">
+                                    <table:label><Label text="Type" design="Bold" /></table:label>
+                                    <table:template>
+                                        <ObjectStatus
+                                            text= "{path: 'ticketDetailModel>MsgTyp', formatter: '.formatErrMsgTypeText'}"
+                                            state="{path: 'ticketDetailModel>MsgTyp', formatter: '.formatErrMsgTypeState'}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="6rem">
+                                    <table:label><Label text="Msg No." design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>MsgNo}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <table:Column width="8rem">
+                                    <table:label><Label text="TSW Date" design="Bold" /></table:label>
+                                    <table:template>
+                                        <Text text="{path:'ticketDetailModel>TSWDate', type:'sap.ui.model.odata.type.Date', formatOptions:{pattern:'dd-MM-yyyy', UTC:true}}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="7rem">
+                                    <table:label><Label text="Ref. Document" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>RefDoc}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <table:Column width="11rem">
+                                    <table:label><Label text="Doc Description" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>DocDescription}" wrapping="false" /></table:template>
+                                </table:Column>
+                                <table:Column width="auto" minWidth="14rem">
+                                    <table:label><Label text="Message" design="Bold" /></table:label>
+                                    <table:template><Text text="{ticketDetailModel>ErrorDescription}" wrapping="true" /></table:template>
+                                </table:Column>
+                            </table:columns>
+                        </table:Table>
+
+                    </IconTabFilter>
+
+                </items>
+            </IconTabBar>
+
+        </content>
+
+        <endButton>
+            <Button text="Close" press=".onCloseTicketDetailDialog" />
+        </endButton>
+
+    </Dialog>
+
+</core:FragmentDefinition>

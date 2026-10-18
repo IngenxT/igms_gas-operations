@@ -1,0 +1,188 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog id="IdDataIssuesDialog" title="Data Issues" contentWidth="70rem" contentHeight="34rem" draggable="true" resizable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Title text="{dataIssuesModel>/Count} issue(s) found while fetching Scheduled Items" level="H5" class="sapUiTinyMarginBottom" />
+                <!-- Only shown when opened as the pre-run Simulate/Allocate & Save gate
+                     (nominationTable._openDataIssuesDialogForConfirm) — hidden for a plain
+                     view via the header Issues button, where there's nothing to continue to. -->
+                <Text text="These will be skipped (a row scoped to one Partner: that Partner only; otherwise the whole Location). Continue to run the rest, or Close to cancel."
+                    visible="{dataIssuesModel>/ShowContinue}" class="sapUiSmallMarginBottom" />
+
+                <!-- Two separate tables, not one merged list — MissingSCADAReading is
+                     Location-level (has Transport System, no Nomination) and
+                     ConversionFailures is nomination-item-level (has Nomination, no
+                     Transport System — never tracked at that point in the backend
+                     pipeline); merging them left a column blank on every row of
+                     whichever category it didn't apply to. Stacked, not tabbed, so both
+                     are visible at once. -->
+                <Panel headerText="Missing / Incomplete Readings ({dataIssuesModel>/ReadingCount})"
+                    class="sapUiTinyMarginBottom">
+                    <Table id="IdDataIssuesReadingTable" items="{dataIssuesModel>/ReadingIssues}"
+                        growing="true" growingThreshold="20"
+                        noDataText="No missing or incomplete readings for the current selection.">
+                        <columns>
+                            <Column width="7rem"><Text text="Gas Day" /></Column>
+                            <Column width="16rem"><Text text="Issue Type" /></Column>
+                            <Column width="12rem"><Text text="Transport System" /></Column>
+                            <Column width="12rem"><Text text="Business Location" /></Column>
+                            <!-- Blank for an OWN/PRIMARY/HYBRID or location-wide THIRDPARTY gap —
+                                 set only for a THIRDPARTY row scoped to one partner (Partner+
+                                 Location grain), so a shared connection point's other partners
+                                 are visibly unaffected by this one gap. -->
+                            <Column width="14rem"><Text text="Partner" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{path: 'dataIssuesModel>GasDay', formatter: '.formatDate'}" />
+                                    <ObjectStatus text="{dataIssuesModel>Category}" state="{dataIssuesModel>CategoryState}" icon="{dataIssuesModel>CategoryIcon}" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>TransportSystem'},{path:'dataIssuesModel>TransportSystemName'}], formatter:'.fmtIssueTransport'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>BusinessLocation'},{path:'dataIssuesModel>BusinessLocationDesc'}], formatter:'.fmtIssueLocation'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>Partner'},{path:'dataIssuesModel>PartnerName'}], formatter:'.fmtIssuePartner'}" wrapping="false" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <Panel headerText="Conversion Failures ({dataIssuesModel>/ConversionCount})" class="sapUiTinyMarginBottom">
+                    <Table id="IdDataIssuesConversionTable" items="{dataIssuesModel>/ConversionIssues}"
+                        growing="true" growingThreshold="20"
+                        noDataText="No conversion failures for the current selection.">
+                        <columns>
+                            <Column width="7rem"><Text text="Gas Day" /></Column>
+                            <Column width="14rem"><Text text="Business Location" /></Column>
+                            <Column width="10rem"><Text text="Nomination" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Details" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{path: 'dataIssuesModel>GasDay', formatter: '.formatDate'}" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>BusinessLocation'},{path:'dataIssuesModel>BusinessLocationDesc'}], formatter:'.fmtIssueLocation'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>NominationKey'},{path:'dataIssuesModel>NominationItem'}], formatter:'.fmtIssueNomination'}" wrapping="false" />
+                                    <Text text="{dataIssuesModel>Message}" wrapping="true" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- Rank blank/0 — RunAllocateSave/processTicketing block the whole Location
+                     for these; tracked at Go time (scheduledNomItems.js) and surfaced here. -->
+                <Panel headerText="Missing Rank ({dataIssuesModel>/RankCount})">
+                    <Table id="IdDataIssuesRankTable" items="{dataIssuesModel>/RankIssues}"
+                        growing="true" growingThreshold="20"
+                        noDataText="No missing/zero Rank items for the current selection.">
+                        <columns>
+                            <Column width="7rem"><Text text="Gas Day" /></Column>
+                            <Column width="14rem"><Text text="Business Location" /></Column>
+                            <Column width="9rem"><Text text="Contract" /></Column>
+                            <Column width="14rem"><Text text="Partner" /></Column>
+                            <Column width="10rem"><Text text="Nomination" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Details" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{path: 'dataIssuesModel>GasDay', formatter: '.formatDate'}" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>BusinessLocation'},{path:'dataIssuesModel>BusinessLocationDesc'}], formatter:'.fmtIssueLocation'}" wrapping="false" />
+                                    <Text text="{dataIssuesModel>Contract}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>Partner'},{path:'dataIssuesModel>PartnerName'}], formatter:'.fmtIssuePartner'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>NominationKey'},{path:'dataIssuesModel>NominationItem'}], formatter:'.fmtIssueNomination'}" wrapping="false" />
+                                    <Text text="{dataIssuesModel>Message}" wrapping="true" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- Location(s) already ticketed in TSW (at least one item there carries a
+                     TicketKey) — must not be silently re-processed by a later Simulate/
+                     Allocate & Save/Ticketing run for the whole Location. -->
+                <Panel class="sapUiTinyMarginTop antTicketedPanel">
+                    <headerToolbar>
+                        <Toolbar class="antTicketedPanelHeader">
+                            <core:Icon src="sap-icon://locked" size="0.9rem" class="antTicketedPanelIcon sapUiTinyMarginEnd" />
+                            <Title text="Already Ticketed ({dataIssuesModel>/TicketedCount})" level="H6" />
+                        </Toolbar>
+                    </headerToolbar>
+                    <Table id="IdDataIssuesTicketedTable" items="{dataIssuesModel>/TicketedIssues}"
+                        growing="true" growingThreshold="20"
+                        noDataText="No already-ticketed locations for the current selection.">
+                        <columns>
+                            <Column width="7rem"><Text text="Gas Day" /></Column>
+                            <Column width="12rem"><Text text="Transport System" /></Column>
+                            <Column width="14rem"><Text text="Business Location" /></Column>
+                            <!-- Blank for an OWN/PRIMARY/HYBRID (whole-Location) entry — set only
+                                 for a THIRDPARTY row already ticketed for one partner, which does
+                                 NOT exclude the rest of this shared connection point. -->
+                            <Column width="14rem"><Text text="Partner" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Details" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{path: 'dataIssuesModel>GasDay', formatter: '.formatDate'}" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>TransportSystem'},{path:'dataIssuesModel>TransportSystemName'}], formatter:'.fmtIssueTransport'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>BusinessLocation'},{path:'dataIssuesModel>BusinessLocationDesc'}], formatter:'.fmtIssueLocation'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>Partner'},{path:'dataIssuesModel>PartnerName'}], formatter:'.fmtIssuePartner'}" wrapping="false" />
+                                    <ObjectStatus text="{dataIssuesModel>Message}" icon="sap-icon://locked" state="Warning" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- SCADA Measurement present with NO matching nomination at all — the
+                     mirror case of Missing/Incomplete Readings above. Must not be silently
+                     ignored by Simulate/Allocate & Save/Ticketing for the whole Location
+                     (OWN/PRIMARY/HYBRID-fallback) or Partner+Location (dedicated-meter
+                     HYBRID / THIRDPARTY). -->
+                <Panel class="sapUiTinyMarginTop antTicketedPanel">
+                    <headerToolbar>
+                        <Toolbar class="antTicketedPanelHeader">
+                            <core:Icon src="sap-icon://alert" size="0.9rem" class="antTicketedPanelIcon sapUiTinyMarginEnd" />
+                            <Title text="Meter Reading/ Customer Quantity with no Nominations ({dataIssuesModel>/OrphanCount})" level="H6" />
+                        </Toolbar>
+                    </headerToolbar>
+                    <Table id="IdDataIssuesOrphanTable" items="{dataIssuesModel>/OrphanIssues}"
+                        growing="true" growingThreshold="20"
+                        noDataText="No orphan SCADA readings for the current selection.">
+                        <columns>
+                            <Column width="7rem"><Text text="Gas Day" /></Column>
+                            <Column width="12rem"><Text text="Transport System" /></Column>
+                            <Column width="14rem"><Text text="Business Location" /></Column>
+                            <!-- Blank for an OWN/PRIMARY/HYBRID (whole-Location) entry — set only
+                                 for a dedicated-meter HYBRID or THIRDPARTY row scoped to one
+                                 partner, which does NOT exclude the rest of this shared
+                                 connection point. -->
+                            <Column width="14rem"><Text text="Partner" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Details" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{path: 'dataIssuesModel>GasDay', formatter: '.formatDate'}" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>TransportSystem'},{path:'dataIssuesModel>TransportSystemName'}], formatter:'.fmtIssueTransport'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>BusinessLocation'},{path:'dataIssuesModel>BusinessLocationDesc'}], formatter:'.fmtIssueLocation'}" wrapping="false" />
+                                    <Text text="{parts:[{path:'dataIssuesModel>Partner'},{path:'dataIssuesModel>PartnerName'}], formatter:'.fmtIssuePartner'}" wrapping="false" />
+                                    <ObjectStatus text="{dataIssuesModel>Message}" icon="sap-icon://alert" state="Error" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Continue" type="Emphasized" visible="{dataIssuesModel>/ShowContinue}" press=".onContinueDataIssues" />
+        </beginButton>
+        <endButton>
+            <Button text="Close" press=".onCloseDataIssuesDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

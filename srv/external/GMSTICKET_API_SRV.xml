@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="GMS.TICKET_API_SRV" xml:lang="en" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="NomTicket" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Save"/>
+                </Key>
+                <Property Name="Save" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Save" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="toTicketHeader" Relationship="GMS.TICKET_API_SRV.HeaderAssociation" FromRole="FromRole_HeaderAssociation" ToRole="ToRole_HeaderAssociation"/>
+                <NavigationProperty Name="toTicketItems" Relationship="GMS.TICKET_API_SRV.ItemsAssociation" FromRole="FromRole_ItemsAssociation" ToRole="ToRole_ItemsAssociation"/>
+                <NavigationProperty Name="toReturn" Relationship="GMS.TICKET_API_SRV.ReturnAssociation" FromRole="FromRole_ReturnAssociation" ToRole="ToRole_ReturnAssociation"/>
+            </EntityType>
+            <EntityType Name="TicketHeader" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketKey"/>
+                </Key>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketVersion" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Ticket version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketPurpose" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Ticket Purpose" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EventNr" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Event number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Event type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocType" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Document type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EvSeq" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Seq. number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocNumber" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Document no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Shitem" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Shipment item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Event status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Actualstartfrom" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Actualstartto" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Actualendfrom" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Actualendto" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreName" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Created by" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Creation" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChaName" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Changed by" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Modification" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="VehNr" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Vehicle Seq. No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tsrfo" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Seq.stage" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Delind" Type="Edm.Boolean" sap:unicode="false" sap:label="Deletion ind." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Updkz" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Update indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="TicketItems" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketVersion" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Ticket version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketPurpose" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Ticket Purpose" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExtPosnr" Type="Edm.String" MaxLength="6" sap:unicode="false" sap:label="External pos." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Item status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Substatus" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Item sub-status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Sityp" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Sched.type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tktsubrc" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Return code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Mvscenario" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Mvmt.scenario" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomnr" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Nomination no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Receiver" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Loc.partner" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Locid" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Location ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tanknr" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Tank seq. no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Vehicle" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Vehicle Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Menge" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Meins" sap:label="SchedQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Grosquan" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Meins" sap:label="SchedQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Meins" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Base Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Matnr" Type="Edm.String" MaxLength="40" sap:unicode="false" sap:label="Material" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tankage" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Tankage partner" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Loc.partner" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Consigne" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="ConsigneePartnr" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="AgreedQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="AgreedQtyUom" sap:label="Agreed Qty." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="AgreedQtyUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="LD Matrl. UOM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="ShipQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="ShipQtyUom" sap:label="Ship Qty." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ShipQtyUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="LD Matrl. UOM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Mttmp" Type="Edm.Double" sap:unicode="false" sap:label="Mat.Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Mtteh" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Mat.Temp.Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="OApiGrav" Type="Edm.Double" sap:unicode="false" sap:label="Test Density" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ApiGrtD" Type="Edm.Double" sap:unicode="false" sap:label="Test Density" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tstmp" Type="Edm.Double" sap:unicode="false" sap:label="Test Temp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tsteh" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Test Temp.Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Tdich" Type="Edm.Double" sap:unicode="false" sap:label="Test Density" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Erdat" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Created on" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Erzeit" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Created" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Ernam" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Created by" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Aedat" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Changed On" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Aezeit" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Changed" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Aenam" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Changed by" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Bloind" Type="Edm.Boolean" sap:unicode="false" sap:label="Blocking ind." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Delind" Type="Edm.Boolean" sap:unicode="false" sap:label="Deletion ind." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tktselect" Type="Edm.Boolean" sap:unicode="false" sap:label="Flag to Select Tkt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Budat" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Posting Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CloseNomit" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Close nomination itm" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Eventtype" Type="Edm.String" MaxLength="16" sap:unicode="false" sap:label="Event date type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EventDate" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Event date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Gmmnr" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Gen. meter no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OItmstm" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OMetev" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Met. event type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CItmstm" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CMetev" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Met. event type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Stoprdg" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="End reading" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StmQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="StmUom" sap:label="St.mt.Qty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StmUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Stm.Uom" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Socnr" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="SOCSEG number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ODipRead" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="ODipReadUom" sap:label="Open Dip" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ODipReadUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Length UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="OEtmstm" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="Dip timestamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OSocev" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Event key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CDipRead" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="CDipReadUom" sap:label="CloseDip" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CDipReadUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Length UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="CEtmstm" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="Dip timestamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CSocev" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Event key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Stopdip" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="StopdipUom" sap:label="Total height" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StopdipUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Length UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="StpGauQuan" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="StpGauUom" sap:label="Stp.GaugeQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StpGauUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Stp.Gau.Uom" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="GauQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="GauUom" sap:label="GaugeQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="GauUom" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="GaugeUoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Shtype" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Bulk shipm.type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Vstel" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Shipping Point" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChargO" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Batch orig" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WerksO" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LgortO" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Stor. Loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChargD" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Batch dest." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WerksD" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LgortD" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Stor. Loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TimeStLoadSta" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="Creation Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TimeStLoadEnd" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="Creation Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TimeStLedOt" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="Creation Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChargDCreate" Type="Edm.Boolean" sap:unicode="false" sap:label="Batch create" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OibBltime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Posting time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChargL" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Batch load" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChargLCreate" Type="Edm.Boolean" sap:unicode="false" sap:label="Ld. Btch create" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Shtyp" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Shipment Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MengePar" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="UnitIPar" sap:label="SchedParQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UnitIPar" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="PUoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Railcarqty" Type="Edm.Int32" sap:unicode="false" sap:label="No. of Railcars" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DummyTktitmInclEewPs" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Extension Field" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Ldplt" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Loading plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Itplt" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="In-Trans. Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Itstlc" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="In-Trans. SLoc" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Itbtch" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="In-Trans. Batch" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Updkz" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Update indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="return" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Type"/>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Number"/>
+                </Key>
+                <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Message type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Message Class" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Number" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Message Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Message" Type="Edm.String" MaxLength="220" sap:unicode="false" sap:label="Message Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LogNo" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Log number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LogMsgNo" Type="Edm.String" MaxLength="6" sap:unicode="false" sap:label="Message no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MessageV1" Type="Edm.String" MaxLength="50" sap:unicode="false" sap:label="Message Variable" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MessageV2" Type="Edm.String" MaxLength="50" sap:unicode="false" sap:label="Message Variable" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MessageV3" Type="Edm.String" MaxLength="50" sap:unicode="false" sap:label="Message Variable" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MessageV4" Type="Edm.String" MaxLength="50" sap:unicode="false" sap:label="Message Variable" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Parameter" Type="Edm.String" MaxLength="32" sap:unicode="false" sap:label="Parameter Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Row" Type="Edm.Int32" sap:unicode="false" sap:label="Parameter line" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Field" Type="Edm.String" MaxLength="30" sap:unicode="false" sap:label="Field name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="System" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Logical system" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="TktlogDetailHead" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ExecId"/>
+                </Key>
+                <Property Name="CompletedAt" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ErrorCount" Type="Edm.Int32" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ErrorMessage" Type="Edm.String" MaxLength="220" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExecDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:unicode="false" sap:label="Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExecId" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExecStatus" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExecTime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExecUser" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:unicode="false" sap:label="Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ICIndicator" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ParametersJson" Type="Edm.String" MaxLength="2000" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ProcessingTime" Type="Edm.Decimal" Precision="10" Scale="3" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SuccessCount" Type="Edm.Int32" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SystemError" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TotalItems" Type="Edm.Int32" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tsyst" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WarningCount" Type="Edm.Int32" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="to_logtkts" Relationship="GMS.TICKET_API_SRV.Ticket_Head_To_Item" FromRole="FromRole_Ticket_Head_To_Item" ToRole="ToRole_Ticket_Head_To_Item"/>
+            </EntityType>
+            <EntityType Name="ActualNomnrNomit" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Nomnr"/>
+                    <PropertyRef Name="Nomit"/>
+                </Key>
+                <Property Name="Nomnr" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualConpat" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Conpat"/>
+                </Key>
+                <Property Name="Conpat" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="ContrPartner" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualInput" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="Tsyst"/>
+                    <PropertyRef Name="Locid"/>
+                    <PropertyRef Name="Nomtk"/>
+                    <PropertyRef Name="Nomit"/>
+                    <PropertyRef Name="Conpat"/>
+                    <PropertyRef Name="Matnr"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false" sap:label="Gas Day" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Tsyst" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Trans system" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Locid" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Location ID" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Conpat" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="ContrPartner" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Matnr" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Sched.Material" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ProcessIndicator" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Process Indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Scenario" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Scenario" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="TicketDetail" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="Purpose"/>
+                </Key>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Ticket Version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Purpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Purpose" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketNumber" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Ticket Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ProcessStatus" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MessageSummary" Type="Edm.String" MaxLength="255" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HasDocs" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HasErrors" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedDate" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Ticket Created Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedTime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Ticket Created Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Ticket Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChangedDate" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Ticket Changed Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChangedTime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Ticket Changed Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Ticket Changed By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="TO_ERRLOG" Relationship="GMS.TICKET_API_SRV.TicketDetail_Errorlog" FromRole="FromRole_TicketDetail_Errorlog" ToRole="ToRole_TicketDetail_Errorlog"/>
+                <NavigationProperty Name="TO_DOCFLOW" Relationship="GMS.TICKET_API_SRV.TicketDetail_DocFlow" FromRole="FromRole_TicketDetail_DocFlow" ToRole="ToRole_TicketDetail_DocFlow"/>
+            </EntityType>
+            <EntityType Name="TktlogDetail" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ExecId"/>
+                    <PropertyRef Name="Logitm"/>
+                    <PropertyRef Name="Nomit"/>
+                    <PropertyRef Name="Nomtk"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="Purpose"/>
+                </Key>
+                <Property Name="ExecId" Type="Edm.Guid" Nullable="false" sap:unicode="false" sap:label="UUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HasDocs" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HasErrors" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Logitm" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MessageSummary" Type="Edm.String" MaxLength="255" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketNumber" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Ticket Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ProcessStatus" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Ticket Version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Purpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Purpose" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedDate" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Ticket Created Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedTime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Ticket Created Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Ticket Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChangedDate" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Ticket Changed Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChangedTime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Ticket Changed Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Ticket Changed By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="TO_DOCFLOW" Relationship="GMS.TICKET_API_SRV.Ticket_Doc_FLow" FromRole="FromRole_Ticket_Doc_FLow" ToRole="ToRole_Ticket_Doc_FLow"/>
+                <NavigationProperty Name="TO_ERRLOG" Relationship="GMS.TICKET_API_SRV.Ticket_Log_Error" FromRole="FromRole_Ticket_Log_Error" ToRole="ToRole_Ticket_Log_Error"/>
+            </EntityType>
+            <EntityType Name="ErrorLog" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="Purpose"/>
+                    <PropertyRef Name="SequenceNo"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Ticket Version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Purpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Purpose" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SequenceNo" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="SeqNo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketNumber" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Ticket Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MvScenario" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="MV Scenario" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Return" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Return Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RefDoc" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="SchedQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatYear" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="MatYear" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RefDocItem" Type="Edm.String" MaxLength="6" sap:unicode="false" sap:label="RefDocItem" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocCategory" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Doc Category" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocDescription" Type="Edm.String" MaxLength="100" sap:unicode="false" sap:label="Document Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TSWDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:unicode="false" sap:label="TSW Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MsgId" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Message Id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MsgTyp" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Message Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MsgStatus" Type="Edm.String" MaxLength="32" sap:unicode="false" sap:label="Message Status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MsgNo" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Message No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RevDoc" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Rev Doc" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ErrorDescription" Type="Edm.String" MaxLength="255" sap:unicode="false" sap:label="Message Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Source" Type="Edm.String" MaxLength="50" sap:unicode="false" sap:label="Source" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="DocFlow" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="Purpose"/>
+                    <PropertyRef Name="SequenceNo"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Ticket Version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Purpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Purpose" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SequenceNo" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="SeqNo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketNumber" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Ticket Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Return" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Return Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RefDoc" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="SchedQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MatYear" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="MatYear" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RefDocItem" Type="Edm.String" MaxLength="6" sap:unicode="false" sap:label="RefDocItem" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocCategory" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Doc Category" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RevDoc" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Rev Doc" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocDescription" Type="Edm.String" MaxLength="100" sap:unicode="false" sap:label="Document Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualDate" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Date"/>
+                </Key>
+                <Property Name="Date" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:unicode="false" sap:label="SchedDate" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualError" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="Nomtk"/>
+                    <PropertyRef Name="Nomit"/>
+                    <PropertyRef Name="Locid"/>
+                    <PropertyRef Name="Menge"/>
+                    <PropertyRef Name="Meins"/>
+                    <PropertyRef Name="Msgty"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Locid" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Location ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Menge" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:label="SchedQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Meins" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Base Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Msgty" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Message Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Message" Type="Edm.String" Nullable="false" MaxLength="220" sap:unicode="false" sap:label="Message Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualLocid" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Locid"/>
+                </Key>
+                <Property Name="Locid" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Location ID" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualMatnr" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Matnr"/>
+                </Key>
+                <Property Name="Matnr" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Sched.Material" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualNomit" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Nomit"/>
+                </Key>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualNomnr" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Nomnr"/>
+                </Key>
+                <Property Name="Nomnr" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination no." sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualSuccess" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="Nomtk"/>
+                    <PropertyRef Name="Nomit"/>
+                    <PropertyRef Name="Locid"/>
+                    <PropertyRef Name="Menge"/>
+                    <PropertyRef Name="Meins"/>
+                    <PropertyRef Name="Msgty"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Locid" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Location ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Menge" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:label="SchedQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Meins" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Base Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Msgty" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Message Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Message" Type="Edm.String" Nullable="false" MaxLength="220" sap:unicode="false" sap:label="Message Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualSuccessFlow" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="SeqNmbr"/>
+                    <PropertyRef Name="Docnr"/>
+                    <PropertyRef Name="Mjahr"/>
+                    <PropertyRef Name="Posnr"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Ticket key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Item number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SeqNmbr" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Sequence number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Docnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Ref. doc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Mjahr" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Mat. Doc. Year" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Posnr" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Ref.Doc.Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocCat" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Document Cat." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocCatText" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Short text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Revdoc" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="RevDoc" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ActualTsyst" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Tsyst"/>
+                </Key>
+                <Property Name="Tsyst" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Trans system" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="NomTicketActual" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Actualize"/>
+                    <PropertyRef Name="ActualizeIC"/>
+                </Key>
+                <Property Name="Actualize" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Save" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ActualizeIC" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="ActualizeIC" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ProcessIndicator" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Process Indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Scenario" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Scenario" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="Nomnr" Relationship="GMS.TICKET_API_SRV.Actual_Nomnr" FromRole="FromRole_Actual_Nomnr" ToRole="ToRole_Actual_Nomnr"/>
+                <NavigationProperty Name="Tsyst" Relationship="GMS.TICKET_API_SRV.Actual_Tsyst" FromRole="FromRole_Actual_Tsyst" ToRole="ToRole_Actual_Tsyst"/>
+                <NavigationProperty Name="Nomit" Relationship="GMS.TICKET_API_SRV.Actual_Nomit" FromRole="FromRole_Actual_Nomit" ToRole="ToRole_Actual_Nomit"/>
+                <NavigationProperty Name="Locid" Relationship="GMS.TICKET_API_SRV.Actual_Locid" FromRole="FromRole_Actual_Locid" ToRole="ToRole_Actual_Locid"/>
+                <NavigationProperty Name="Matnr" Relationship="GMS.TICKET_API_SRV.Actual_Matnr" FromRole="FromRole_Actual_Matnr" ToRole="ToRole_Actual_Matnr"/>
+                <NavigationProperty Name="Date" Relationship="GMS.TICKET_API_SRV.Actual_Date" FromRole="FromRole_Actual_Date" ToRole="ToRole_Actual_Date"/>
+                <NavigationProperty Name="to_Errors" Relationship="GMS.TICKET_API_SRV.Actual_Errors" FromRole="FromRole_Actual_Errors" ToRole="ToRole_Actual_Errors"/>
+                <NavigationProperty Name="to_Success" Relationship="GMS.TICKET_API_SRV.Actual_Success" FromRole="FromRole_Actual_Success" ToRole="ToRole_Actual_Success"/>
+                <NavigationProperty Name="to_DocFlow" Relationship="GMS.TICKET_API_SRV.Actual_SuccessFlow" FromRole="FromRole_Actual_SuccessFlow" ToRole="ToRole_Actual_SuccessFlow"/>
+                <NavigationProperty Name="Inputs" Relationship="GMS.TICKET_API_SRV.Actual_Input" FromRole="FromRole_Actual_Input" ToRole="ToRole_Actual_Input"/>
+                <NavigationProperty Name="Conpat" Relationship="GMS.TICKET_API_SRV.Actual_Conpat" FromRole="FromRole_Actual_Conpat" ToRole="ToRole_Actual_Conpat"/>
+                <NavigationProperty Name="NomnrNomit" Relationship="GMS.TICKET_API_SRV.Actual_NomnrNomit" FromRole="FromRole_Actual_NomnrNomit" ToRole="ToRole_Actual_NomnrNomit"/>
+            </EntityType>
+            <EntityType Name="NomTicketSave" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Save"/>
+                </Key>
+                <Property Name="Save" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Indicator" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="to_return" Relationship="GMS.TICKET_API_SRV.SaveTicketReturnAssociation" FromRole="FromRole_SaveTicketReturnAssociation" ToRole="ToRole_SaveTicketReturnAssociation"/>
+                <NavigationProperty Name="toTicketItems" Relationship="GMS.TICKET_API_SRV.SaveTicketItemsAssociation" FromRole="FromRole_SaveTicketItemsAssociation" ToRole="ToRole_SaveTicketItemsAssociation"/>
+                <NavigationProperty Name="toCVParams" Relationship="GMS.TICKET_API_SRV.SaveTicketCVAssociation" FromRole="FromRole_SaveTicketCVAssociation" ToRole="ToRole_SaveTicketCVAssociation"/>
+            </EntityType>
+            <EntityType Name="CVParams" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Nomtk"/>
+                    <PropertyRef Name="Nomit"/>
+                </Key>
+                <Property Name="Nomtk" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="GCV" Type="Edm.Double" sap:unicode="false" sap:label="Average GCV" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NCV" Type="Edm.Double" sap:unicode="false" sap:label="Average NCV" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="xGMSxDOCFLOWType" sap:label="Flow For Nom Ticket" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ContractNo"/>
+                </Key>
+                <Property Name="ContractNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="SD Document" sap:quickinfo="Sales and Distribution Document Number"/>
+                <Property Name="OrderNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Subsequent Document" sap:quickinfo="Subsequent Sales and Distribution Document"/>
+                <Property Name="DeliveryNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Subsequent Document" sap:quickinfo="Subsequent Sales and Distribution Document"/>
+                <Property Name="TicketKey" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key"/>
+                <Property Name="GMNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Subsequent Document" sap:quickinfo="Subsequent Sales and Distribution Document"/>
+                <Property Name="BillingNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Billing Document"/>
+                <Property Name="BillingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Billing Date"/>
+                <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-to Party"/>
+                <Property Name="CustomerName" Type="Edm.String" MaxLength="80" sap:label="Name of Customer"/>
+                <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Invoiced Quantity" sap:quickinfo="Actual Invoiced Quantity"/>
+                <Property Name="UOM" Type="Edm.String" MaxLength="3" sap:label="Sales Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="MaterialName" Type="Edm.String" MaxLength="40" sap:label="Material Description"/>
+                <Property Name="price" Type="Edm.Decimal" Precision="15" Scale="3" sap:label="Net Weight"/>
+                <Property Name="pricing_dt" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Pricing Date" sap:quickinfo="Date for Pricing and Exchange Rate"/>
+                <Property Name="BillDueDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date"/>
+            </EntityType>
+            <EntityType Name="xGMSxNOMTICKETType" sap:label="Ticketing For Nomination" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ContractNo"/>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="Item"/>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                </Key>
+                <Property Name="ContractNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Document No" sap:quickinfo="Document Number"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
+                <Property Name="Item" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Document Item"/>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Item number" sap:quickinfo="OIL-TSW: Ticket item number"/>
+                <Property Name="Versn" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative"/>
+                <Property Name="Mastercontno" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Maste Agrmt. No" sap:quickinfo="Master Agreement No"/>
+                <Property Name="CustomerName" Type="Edm.String" MaxLength="80" sap:label="Name of Supplier"/>
+                <Property Name="NominationItem" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="SoldToParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-to Party"/>
+                <Property Name="Vendor" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+                <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer No"/>
+                <Property Name="DeliveryPoint" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Delivery Point"/>
+                <Property Name="RedelivryPoint" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Redelivery Point" sap:quickinfo="Re-Delivery Ponit"/>
+                <Property Name="ValidTo" Type="Edm.Time" Precision="0" sap:label="Time To" sap:quickinfo="Nomination Time"/>
+                <Property Name="ValidFrom" Type="Edm.Time" Precision="0" sap:label="Time From" sap:heading=""/>
+                <Property Name="Zstat" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Status"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="NominationKey" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="DocumentType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Document Type"/>
+                <Property Name="TransportSystem" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Transport system"/>
+                <Property Name="DeliveryDcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Daily ContractQty" sap:quickinfo="Daily Contractual Quantity"/>
+                <Property Name="RedeliveryDcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="RDCQ" sap:heading=""/>
+                <Property Name="Uom" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="ProposedDnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="DNQ" sap:quickinfo="daily nomination Quantity"/>
+                <Property Name="Event" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Event Type" sap:quickinfo="Nomination Event"/>
+                <Property Name="ApprovedDnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Approved DNQ"/>
+                <Property Name="RepublishDnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="RePublish DNQ" sap:quickinfo="Re-Publish DNQ"/>
+                <Property Name="Remarks" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Long comment" sap:quickinfo="iSeries: Long comment of a table, view or table field"/>
+                <Property Name="Flag" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Nomination Flag" sap:quickinfo="flag for customer nomination"/>
+                <Property Name="Action" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Action"/>
+                <Property Name="Path" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Path"/>
+                <Property Name="Source" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Source"/>
+                <Property Name="CustGrp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer Group"/>
+                <Property Name="Timestamp" Type="Edm.DateTimeOffset" Precision="0" sap:label="Short Time Stamp" sap:quickinfo="UTC Time Stamp in Short Form (YYYYMMDDhhmmss)"/>
+                <Property Name="ServiceProfile" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Profile"/>
+                <Property Name="SalesPurchInd" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Sales Purchase Indicator" sap:heading=""/>
+                <Property Name="AllocatedQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Allocated Qty" sap:quickinfo="Allocated Quantity"/>
+                <Property Name="AllocatedUom" Type="Edm.String" MaxLength="3" sap:label="Allocated qty UOM" sap:quickinfo="Unit of Measure for Allocated Quantity Field" sap:semantics="unit-of-measure"/>
+            </EntityType>
+            <EntityType Name="xGMSxTICKET_LOGSType" sap:label="iGMS - Ticket Logs" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ExecId"/>
+                </Key>
+                <Property Name="ExecId" Type="Edm.Guid" Nullable="false" sap:display-format="UpperCase" sap:label="UUID" sap:quickinfo="16-byte UID in 32 chars (hexadecimal)"/>
+                <Property Name="ExecDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date"/>
+                <Property Name="ExecTime" Type="Edm.Time" Precision="0"/>
+                <Property Name="ExecUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="ExecStatus" Type="Edm.String" MaxLength="1"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="TSW: Date"/>
+                <Property Name="Tsyst" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Transport system"/>
+                <Property Name="ICIndicator" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Int. Consump. Flag" sap:quickinfo="Internal Consumption Flag"/>
+                <Property Name="ParametersJson" Type="Edm.String" MaxLength="2000"/>
+                <Property Name="TotalItems" Type="Edm.Int32"/>
+                <Property Name="SuccessCount" Type="Edm.Int32"/>
+                <Property Name="ErrorCount" Type="Edm.Int32"/>
+                <Property Name="WarningCount" Type="Edm.Int32"/>
+                <Property Name="SystemError" Type="Edm.String" MaxLength="1"/>
+                <Property Name="ErrorMessage" Type="Edm.String" MaxLength="220"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="CompletedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="ProcessingTime" Type="Edm.Decimal" Precision="10" Scale="3"/>
+                <NavigationProperty Name="to_logtkts" Relationship="GMS.TICKET_API_SRV.assoc_82475998CC3A50E853F2F0E7BD443065" FromRole="FromRole_assoc_82475998CC3A50E853F2F0E7BD443065" ToRole="ToRole_assoc_82475998CC3A50E853F2F0E7BD443065"/>
+            </EntityType>
+            <EntityType Name="xGMSxTKTDATAType" sap:label="DATA For Ticket" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="TicketPurpose"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Item number" sap:quickinfo="OIL-TSW: Ticket item number"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Ticket version" sap:quickinfo="OIL-TSW: Ticket version"/>
+                <Property Name="TicketPurpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:text="TicketPurposeDescription" sap:label="Ticket Purpose" sap:quickinfo="OIL-TSW: Ticket Purpose"/>
+                <Property Name="TicketPurposeDescription" Type="Edm.String" MaxLength="60" sap:label="Short Description" sap:quickinfo="Short Text for Fixed Values"/>
+                <Property Name="NominationNumber" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination number"/>
+                <Property Name="NominationKey" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="NominationItem" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="LocationId" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:text="LocationName" sap:label="Location ID"/>
+                <Property Name="LocationName" Type="Edm.String" MaxLength="60" sap:label="Location name" sap:quickinfo="Location name (used by system owner)"/>
+                <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Scheduled qty"/>
+                <Property Name="UOM" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:text="MaterialName" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="MaterialName" Type="Edm.String" MaxLength="40" sap:label="Material Description"/>
+                <Property Name="CreatedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On" sap:quickinfo="Record Creation Date"/>
+                <Property Name="CreatedTime" Type="Edm.Time" Precision="0" sap:label="Created" sap:quickinfo="Time of creation"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Name of Person Responsible for Creating the Object"/>
+                <Property Name="ChangedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Changed On" sap:quickinfo="Last Changed On"/>
+                <Property Name="ChangedTime" Type="Edm.Time" Precision="0" sap:label="Changed" sap:quickinfo="Time of day the record was changed"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="Name of Person Who Changed Object"/>
+                <Property Name="BlockingIndicator" Type="Edm.Boolean" sap:label="Blocking Ind." sap:quickinfo="Blocking indicator"/>
+                <Property Name="DeletionIndicator" Type="Edm.Boolean" sap:label="Deletion indicator"/>
+                <Property Name="DocumentDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Posting Date" sap:quickinfo="Posting Date in the Document"/>
+                <Property Name="BillingNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Billing Document"/>
+                <Property Name="BillingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Billing Date"/>
+                <NavigationProperty Name="to_bill" Relationship="GMS.TICKET_API_SRV.assoc_8F94C7EF0F37F3D217004E98F567AC75" FromRole="FromRole_assoc_8F94C7EF0F37F3D217004E98F567AC75" ToRole="ToRole_assoc_8F94C7EF0F37F3D217004E98F567AC75"/>
+                <NavigationProperty Name="to_flow" Relationship="GMS.TICKET_API_SRV.assoc_39F8B4DC59FF660B8681C3B20E562915" FromRole="FromRole_assoc_39F8B4DC59FF660B8681C3B20E562915" ToRole="ToRole_assoc_39F8B4DC59FF660B8681C3B20E562915"/>
+            </EntityType>
+            <EntityType Name="xGMSxTKTDETAILS02Type" sap:label="Nomination Ticket Details (Doc Flow)" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="TicketPurpose"/>
+                    <PropertyRef Name="SeqNmbr"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Item number" sap:quickinfo="OIL-TSW: Ticket item number"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Ticket version" sap:quickinfo="OIL-TSW: Ticket version"/>
+                <Property Name="TicketPurpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:label="Ticket Purpose" sap:quickinfo="OIL-TSW: Ticket Purpose"/>
+                <Property Name="SeqNmbr" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="NonNegative" sap:label="Sequence number" sap:quickinfo="TSW: Sequence number"/>
+                <Property Name="TransactionCode" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Transaction Code"/>
+                <Property Name="Returncode" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Return code"/>
+                <Property Name="DocumentNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Reference document" sap:quickinfo="Nomination Reference Document"/>
+                <Property Name="DocumentYear" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Material Doc. Year" sap:quickinfo="Material Document Year"/>
+                <Property Name="ItemNo" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Reference Doc. Item" sap:quickinfo="Nomination Reference Document Item"/>
+                <Property Name="DocumentCategory" Type="Edm.String" MaxLength="4" sap:label="SD Document Category"/>
+                <Property Name="DocumentCategoryText" Type="Edm.String" MaxLength="60" sap:label="SD Document Category Description"/>
+                <Property Name="ReversalDocumentIndicator" Type="Edm.Boolean" sap:label="RevDoc" sap:quickinfo="Indicator 'Reversal Document'"/>
+            </EntityType>
+            <EntityType Name="xGMSxTKTDETAILS03Type" sap:label="Nomination Ticket Details" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="TicketVersion"/>
+                    <PropertyRef Name="TicketPurpose"/>
+                </Key>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Item number" sap:quickinfo="OIL-TSW: Ticket item number"/>
+                <Property Name="TicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Ticket version" sap:quickinfo="OIL-TSW: Ticket version"/>
+                <Property Name="TicketPurpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:label="Ticket Purpose" sap:quickinfo="OIL-TSW: Ticket Purpose"/>
+                <Property Name="TicketPurposeDescription" Type="Edm.String" MaxLength="60" sap:label="Short Description" sap:quickinfo="Short Text for Fixed Values"/>
+                <Property Name="NominationNumber" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination number"/>
+                <Property Name="NominationKey" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="NominationItem" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="LocationId" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Location ID"/>
+                <Property Name="LocationName" Type="Edm.String" MaxLength="60" sap:label="Location name" sap:quickinfo="Location name (used by system owner)"/>
+                <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Scheduled qty"/>
+                <Property Name="UOM" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="MaterialName" Type="Edm.String" MaxLength="40" sap:label="Material Description"/>
+                <Property Name="CreatedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On" sap:quickinfo="Record Creation Date"/>
+                <Property Name="CreatedTime" Type="Edm.Time" Precision="0" sap:label="Created" sap:quickinfo="Time of creation"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Name of Person Responsible for Creating the Object"/>
+                <Property Name="ChangedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Changed On" sap:quickinfo="Last Changed On"/>
+                <Property Name="ChangedTime" Type="Edm.Time" Precision="0" sap:label="Changed" sap:quickinfo="Time of day the record was changed"/>
+                <Property Name="ChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="Name of Person Who Changed Object"/>
+                <Property Name="BlockingIndicator" Type="Edm.Boolean" sap:label="Blocking Ind." sap:quickinfo="Blocking indicator"/>
+                <Property Name="DeletionIndicator" Type="Edm.Boolean" sap:label="Deletion indicator"/>
+                <Property Name="DocumentDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Posting Date" sap:quickinfo="Posting Date in the Document"/>
+                <Property Name="BillingNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Billing Document"/>
+                <Property Name="BillingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Billing Date"/>
+                <Property Name="ScheduledQuantity" Type="Edm.Decimal" Precision="13" Scale="3"/>
+                <Property Name="ScheduledQuantityUOM" Type="Edm.String" MaxLength="3" sap:label="SchedUoM" sap:quickinfo="Scheduled UoM" sap:semantics="unit-of-measure"/>
+                <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer No"/>
+                <Property Name="ContractNo" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Document No" sap:quickinfo="Document Number"/>
+                <Property Name="DocumentType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Document Type"/>
+                <NavigationProperty Name="to_flow" Relationship="GMS.TICKET_API_SRV.assoc_39E8970AEF8616D55BD1DC9B14D630EA" FromRole="FromRole_assoc_39E8970AEF8616D55BD1DC9B14D630EA" ToRole="ToRole_assoc_39E8970AEF8616D55BD1DC9B14D630EA"/>
+            </EntityType>
+            <EntityType Name="xGMSxTKT_EXEC_TICKETSType" sap:label="iGMS - Ticket Execution Tickets Log" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ExecId"/>
+                    <PropertyRef Name="TicketKey"/>
+                    <PropertyRef Name="TicketItem"/>
+                    <PropertyRef Name="Nomtk"/>
+                    <PropertyRef Name="Nomit"/>
+                    <PropertyRef Name="Logitm"/>
+                </Key>
+                <Property Name="ExecId" Type="Edm.Guid" Nullable="false" sap:display-format="UpperCase" sap:label="UUID" sap:quickinfo="16-byte UID in 32 chars (hexadecimal)"/>
+                <Property Name="TicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key"/>
+                <Property Name="TicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Item number" sap:quickinfo="OIL-TSW: Ticket item number"/>
+                <Property Name="Nomtk" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="Nomit" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="Logitm" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Count parameters"/>
+                <Property Name="ProcessStatus" Type="Edm.String" MaxLength="1"/>
+                <Property Name="HasErrors" Type="Edm.String" MaxLength="1"/>
+                <Property Name="HasDocs" Type="Edm.String" MaxLength="1"/>
+                <Property Name="MessageSummary" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="to_docflow" Relationship="GMS.TICKET_API_SRV.assoc_4622AE5318E995CA874C160DBEDB5DEB" FromRole="FromRole_assoc_4622AE5318E995CA874C160DBEDB5DEB" ToRole="ToRole_assoc_4622AE5318E995CA874C160DBEDB5DEB"/>
+                <NavigationProperty Name="to_errlog" Relationship="GMS.TICKET_API_SRV.assoc_6B19DFFCC1AC4119EBB95D62E08F261F" FromRole="FromRole_assoc_6B19DFFCC1AC4119EBB95D62E08F261F" ToRole="ToRole_assoc_6B19DFFCC1AC4119EBB95D62E08F261F"/>
+            </EntityType>
+            <EntityType Name="I_TicketErrorLogType" sap:label="Nomination Ticket Error Log" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="NominationTicketKey"/>
+                    <PropertyRef Name="NominationTicketItem"/>
+                    <PropertyRef Name="NominationTicketVersion"/>
+                    <PropertyRef Name="NominationTicketPurpose"/>
+                    <PropertyRef Name="TicketSequenceNumber"/>
+                </Key>
+                <Property Name="NominationTicketKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket key" sap:quickinfo="OIL-TSW: Ticket key" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="NominationTicketItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Item number" sap:quickinfo="OIL-TSW: Ticket item number"/>
+                <Property Name="NominationTicketVersion" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Ticket version" sap:quickinfo="OIL-TSW: Ticket version"/>
+                <Property Name="NominationTicketPurpose" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:label="Ticket Purpose" sap:quickinfo="OIL-TSW: Ticket Purpose"/>
+                <Property Name="TicketSequenceNumber" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="NonNegative" sap:label="Sequence number" sap:quickinfo="TSW: Sequence number"/>
+                <Property Name="SourceDocumentItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Reference Doc. Item" sap:quickinfo="Nomination Reference Document Item"/>
+                <Property Name="NominationExtNumber" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination number"/>
+                <Property Name="NominationReferenceDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Reference document" sap:quickinfo="Nomination Reference Document"/>
+                <Property Name="TicketHasError" Type="Edm.String" MaxLength="1"/>
+                <Property Name="TicketMessageType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Message Type"/>
+                <Property Name="TicketNumber" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Ticket external no." sap:quickinfo="OIL-TSW: External ticket number"/>
+                <Property Name="SystemMessageText" Type="Edm.String" MaxLength="200"/>
+                <Property Name="NominationDoc" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="NominationDocItem" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="NominationDocIsBlocked" Type="Edm.Boolean" sap:label="Flag to Select Nom" sap:quickinfo="Flag to Set Nomination Selectable"/>
+                <Property Name="NominationTicketIsBlocked" Type="Edm.Boolean" sap:label="Flag to Select Tkt" sap:quickinfo="Flag to Set Tickets Selectable"/>
+                <Property Name="NominationTicketType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Ticket Type" sap:quickinfo="OIL-TSW: Ticket type"/>
+                <Property Name="DocumentCategoryText" Type="Edm.String" MaxLength="60" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="SDDocumentCategoryName" Type="Edm.String" MaxLength="4" sap:label="SD Document Category" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="MaterialDocumentYear" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Material Doc. Year" sap:quickinfo="Material Document Year" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <Association Name="SaveTicketReturnAssociation" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketSave" Multiplicity="1" Role="FromRole_SaveTicketReturnAssociation"/>
+                <End Type="GMS.TICKET_API_SRV.return" Multiplicity="*" Role="ToRole_SaveTicketReturnAssociation"/>
+            </Association>
+            <Association Name="SaveTicketItemsAssociation" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketSave" Multiplicity="1" Role="FromRole_SaveTicketItemsAssociation"/>
+                <End Type="GMS.TICKET_API_SRV.TicketItems" Multiplicity="*" Role="ToRole_SaveTicketItemsAssociation"/>
+            </Association>
+            <Association Name="SaveTicketCVAssociation" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketSave" Multiplicity="0..1" Role="FromRole_SaveTicketCVAssociation"/>
+                <End Type="GMS.TICKET_API_SRV.CVParams" Multiplicity="*" Role="ToRole_SaveTicketCVAssociation"/>
+            </Association>
+            <Association Name="assoc_8F94C7EF0F37F3D217004E98F567AC75" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKTDATAType" Multiplicity="1" Role="FromRole_assoc_8F94C7EF0F37F3D217004E98F567AC75"/>
+                <End Type="GMS.TICKET_API_SRV.xGMSxDOCFLOWType" Multiplicity="1" Role="ToRole_assoc_8F94C7EF0F37F3D217004E98F567AC75"/>
+            </Association>
+            <Association Name="assoc_39F8B4DC59FF660B8681C3B20E562915" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKTDATAType" Multiplicity="1" Role="FromRole_assoc_39F8B4DC59FF660B8681C3B20E562915"/>
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKTDETAILS02Type" Multiplicity="*" Role="ToRole_assoc_39F8B4DC59FF660B8681C3B20E562915"/>
+            </Association>
+            <Association Name="Ticket_Head_To_Item" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.TktlogDetailHead" Multiplicity="0..1" Role="FromRole_Ticket_Head_To_Item"/>
+                <End Type="GMS.TICKET_API_SRV.TktlogDetail" Multiplicity="*" Role="ToRole_Ticket_Head_To_Item"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_Ticket_Head_To_Item">
+                        <PropertyRef Name="ExecId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_Ticket_Head_To_Item">
+                        <PropertyRef Name="ExecId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_4622AE5318E995CA874C160DBEDB5DEB" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKT_EXEC_TICKETSType" Multiplicity="1" Role="FromRole_assoc_4622AE5318E995CA874C160DBEDB5DEB"/>
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKTDETAILS02Type" Multiplicity="*" Role="ToRole_assoc_4622AE5318E995CA874C160DBEDB5DEB"/>
+            </Association>
+            <Association Name="assoc_6B19DFFCC1AC4119EBB95D62E08F261F" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKT_EXEC_TICKETSType" Multiplicity="1" Role="FromRole_assoc_6B19DFFCC1AC4119EBB95D62E08F261F"/>
+                <End Type="GMS.TICKET_API_SRV.I_TicketErrorLogType" Multiplicity="*" Role="ToRole_assoc_6B19DFFCC1AC4119EBB95D62E08F261F"/>
+            </Association>
+            <Association Name="Ticket_Log_Error" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.TktlogDetail" Multiplicity="0..1" Role="FromRole_Ticket_Log_Error"/>
+                <End Type="GMS.TICKET_API_SRV.ErrorLog" Multiplicity="*" Role="ToRole_Ticket_Log_Error"/>
+            </Association>
+            <Association Name="Ticket_Doc_FLow" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.TktlogDetail" Multiplicity="0..1" Role="FromRole_Ticket_Doc_FLow"/>
+                <End Type="GMS.TICKET_API_SRV.DocFlow" Multiplicity="*" Role="ToRole_Ticket_Doc_FLow"/>
+            </Association>
+            <Association Name="assoc_82475998CC3A50E853F2F0E7BD443065" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.xGMSxTICKET_LOGSType" Multiplicity="1" Role="FromRole_assoc_82475998CC3A50E853F2F0E7BD443065"/>
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKT_EXEC_TICKETSType" Multiplicity="*" Role="ToRole_assoc_82475998CC3A50E853F2F0E7BD443065"/>
+            </Association>
+            <Association Name="Actual_NomnrNomit" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_NomnrNomit"/>
+                <End Type="GMS.TICKET_API_SRV.ActualNomnrNomit" Multiplicity="*" Role="ToRole_Actual_NomnrNomit"/>
+            </Association>
+            <Association Name="Actual_Conpat" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Conpat"/>
+                <End Type="GMS.TICKET_API_SRV.ActualConpat" Multiplicity="*" Role="ToRole_Actual_Conpat"/>
+            </Association>
+            <Association Name="Actual_Input" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Input"/>
+                <End Type="GMS.TICKET_API_SRV.ActualInput" Multiplicity="*" Role="ToRole_Actual_Input"/>
+            </Association>
+            <Association Name="Actual_Date" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Date"/>
+                <End Type="GMS.TICKET_API_SRV.ActualDate" Multiplicity="*" Role="ToRole_Actual_Date"/>
+            </Association>
+            <Association Name="Actual_Errors" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Errors"/>
+                <End Type="GMS.TICKET_API_SRV.ActualError" Multiplicity="*" Role="ToRole_Actual_Errors"/>
+            </Association>
+            <Association Name="Actual_Locid" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Locid"/>
+                <End Type="GMS.TICKET_API_SRV.ActualLocid" Multiplicity="*" Role="ToRole_Actual_Locid"/>
+            </Association>
+            <Association Name="Actual_Matnr" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Matnr"/>
+                <End Type="GMS.TICKET_API_SRV.ActualMatnr" Multiplicity="*" Role="ToRole_Actual_Matnr"/>
+            </Association>
+            <Association Name="Actual_Nomit" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Nomit"/>
+                <End Type="GMS.TICKET_API_SRV.ActualNomit" Multiplicity="*" Role="ToRole_Actual_Nomit"/>
+            </Association>
+            <Association Name="Actual_Nomnr" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Nomnr"/>
+                <End Type="GMS.TICKET_API_SRV.ActualNomnr" Multiplicity="*" Role="ToRole_Actual_Nomnr"/>
+            </Association>
+            <Association Name="Actual_Success" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Success"/>
+                <End Type="GMS.TICKET_API_SRV.ActualSuccess" Multiplicity="*" Role="ToRole_Actual_Success"/>
+            </Association>
+            <Association Name="Actual_SuccessFlow" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_SuccessFlow"/>
+                <End Type="GMS.TICKET_API_SRV.ActualSuccessFlow" Multiplicity="*" Role="ToRole_Actual_SuccessFlow"/>
+            </Association>
+            <Association Name="Actual_Tsyst" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicketActual" Multiplicity="1" Role="FromRole_Actual_Tsyst"/>
+                <End Type="GMS.TICKET_API_SRV.ActualTsyst" Multiplicity="*" Role="ToRole_Actual_Tsyst"/>
+            </Association>
+            <Association Name="assoc_39E8970AEF8616D55BD1DC9B14D630EA" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKTDETAILS03Type" Multiplicity="1" Role="FromRole_assoc_39E8970AEF8616D55BD1DC9B14D630EA"/>
+                <End Type="GMS.TICKET_API_SRV.xGMSxTKTDETAILS02Type" Multiplicity="*" Role="ToRole_assoc_39E8970AEF8616D55BD1DC9B14D630EA"/>
+            </Association>
+            <Association Name="TicketDetail_DocFlow" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.TicketDetail" Multiplicity="1" Role="FromRole_TicketDetail_DocFlow"/>
+                <End Type="GMS.TICKET_API_SRV.DocFlow" Multiplicity="*" Role="ToRole_TicketDetail_DocFlow"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_TicketDetail_DocFlow">
+                        <PropertyRef Name="TicketItem"/>
+                        <PropertyRef Name="TicketKey"/>
+                        <PropertyRef Name="TicketVersion"/>
+                        <PropertyRef Name="Purpose"/>
+                    </Principal>
+                    <Dependent Role="ToRole_TicketDetail_DocFlow">
+                        <PropertyRef Name="TicketItem"/>
+                        <PropertyRef Name="TicketKey"/>
+                        <PropertyRef Name="TicketVersion"/>
+                        <PropertyRef Name="Purpose"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="TicketDetail_Errorlog" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.TicketDetail" Multiplicity="1" Role="FromRole_TicketDetail_Errorlog"/>
+                <End Type="GMS.TICKET_API_SRV.ErrorLog" Multiplicity="*" Role="ToRole_TicketDetail_Errorlog"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_TicketDetail_Errorlog">
+                        <PropertyRef Name="TicketItem"/>
+                        <PropertyRef Name="TicketKey"/>
+                        <PropertyRef Name="TicketVersion"/>
+                        <PropertyRef Name="Purpose"/>
+                    </Principal>
+                    <Dependent Role="ToRole_TicketDetail_Errorlog">
+                        <PropertyRef Name="TicketItem"/>
+                        <PropertyRef Name="TicketKey"/>
+                        <PropertyRef Name="TicketVersion"/>
+                        <PropertyRef Name="Purpose"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ItemsAssociation" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicket" Multiplicity="1" Role="FromRole_ItemsAssociation"/>
+                <End Type="GMS.TICKET_API_SRV.TicketItems" Multiplicity="*" Role="ToRole_ItemsAssociation"/>
+            </Association>
+            <Association Name="ReturnAssociation" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicket" Multiplicity="1" Role="FromRole_ReturnAssociation"/>
+                <End Type="GMS.TICKET_API_SRV.return" Multiplicity="*" Role="ToRole_ReturnAssociation"/>
+            </Association>
+            <Association Name="HeaderAssociation" sap:content-version="1">
+                <End Type="GMS.TICKET_API_SRV.NomTicket" Multiplicity="1" Role="FromRole_HeaderAssociation"/>
+                <End Type="GMS.TICKET_API_SRV.TicketHeader" Multiplicity="*" Role="ToRole_HeaderAssociation"/>
+            </Association>
+            <EntityContainer Name="GMS_TICKET_API_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="xGMSxDOCFLOW" EntityType="GMS.TICKET_API_SRV.xGMSxDOCFLOWType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxNOMTICKET" EntityType="GMS.TICKET_API_SRV.xGMSxNOMTICKETType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxTICKET_LOGS" EntityType="GMS.TICKET_API_SRV.xGMSxTICKET_LOGSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxTKTDATA" EntityType="GMS.TICKET_API_SRV.xGMSxTKTDATAType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxTKTDETAILS02" EntityType="GMS.TICKET_API_SRV.xGMSxTKTDETAILS02Type" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxTKTDETAILS03" EntityType="GMS.TICKET_API_SRV.xGMSxTKTDETAILS03Type" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxTKT_EXEC_TICKETS" EntityType="GMS.TICKET_API_SRV.xGMSxTKT_EXEC_TICKETSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_TicketErrorLog" EntityType="GMS.TICKET_API_SRV.I_TicketErrorLogType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="CreateTicket" EntityType="GMS.TICKET_API_SRV.NomTicket" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TicketHeaderSet" EntityType="GMS.TICKET_API_SRV.TicketHeader" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="TicketItemsSet" EntityType="GMS.TICKET_API_SRV.TicketItems" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="returnSet" EntityType="GMS.TICKET_API_SRV.return" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="TktlogDetailHeadSet" EntityType="GMS.TICKET_API_SRV.TktlogDetailHead" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualNomnrNomitSet" EntityType="GMS.TICKET_API_SRV.ActualNomnrNomit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualConpatSet" EntityType="GMS.TICKET_API_SRV.ActualConpat" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualInputSet" EntityType="GMS.TICKET_API_SRV.ActualInput" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TicketDetailSet" EntityType="GMS.TICKET_API_SRV.TicketDetail" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="TktlogDetailSet" EntityType="GMS.TICKET_API_SRV.TktlogDetail" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ErrorLogSet" EntityType="GMS.TICKET_API_SRV.ErrorLog" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="DocFlowSet" EntityType="GMS.TICKET_API_SRV.DocFlow" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualDateSet" EntityType="GMS.TICKET_API_SRV.ActualDate" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualErrorSet" EntityType="GMS.TICKET_API_SRV.ActualError" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualLocidSet" EntityType="GMS.TICKET_API_SRV.ActualLocid" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualMatnrSet" EntityType="GMS.TICKET_API_SRV.ActualMatnr" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualNomitSet" EntityType="GMS.TICKET_API_SRV.ActualNomit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualNomnrSet" EntityType="GMS.TICKET_API_SRV.ActualNomnr" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualSuccessSet" EntityType="GMS.TICKET_API_SRV.ActualSuccess" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualSuccessFlowSet" EntityType="GMS.TICKET_API_SRV.ActualSuccessFlow" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualTsystSet" EntityType="GMS.TICKET_API_SRV.ActualTsyst" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ActualizeTicket" EntityType="GMS.TICKET_API_SRV.NomTicketActual" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SaveTicket" EntityType="GMS.TICKET_API_SRV.NomTicketSave" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="CVParamsSet" EntityType="GMS.TICKET_API_SRV.CVParams" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <AssociationSet Name="assoc_82475998CC3A50E853F2F0E7BD443065" Association="GMS.TICKET_API_SRV.assoc_82475998CC3A50E853F2F0E7BD443065" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="xGMSxTICKET_LOGS" Role="FromRole_assoc_82475998CC3A50E853F2F0E7BD443065"/>
+                    <End EntitySet="xGMSxTKT_EXEC_TICKETS" Role="ToRole_assoc_82475998CC3A50E853F2F0E7BD443065"/>
+                </AssociationSet>
+                <AssociationSet Name="SaveTicketReturnAssociationSet" Association="GMS.TICKET_API_SRV.SaveTicketReturnAssociation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SaveTicket" Role="FromRole_SaveTicketReturnAssociation"/>
+                    <End EntitySet="returnSet" Role="ToRole_SaveTicketReturnAssociation"/>
+                </AssociationSet>
+                <AssociationSet Name="Ticket_Log_ErrorSet" Association="GMS.TICKET_API_SRV.Ticket_Log_Error" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TktlogDetailSet" Role="FromRole_Ticket_Log_Error"/>
+                    <End EntitySet="ErrorLogSet" Role="ToRole_Ticket_Log_Error"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_4622AE5318E995CA874C160DBEDB5DEB" Association="GMS.TICKET_API_SRV.assoc_4622AE5318E995CA874C160DBEDB5DEB" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="xGMSxTKT_EXEC_TICKETS" Role="FromRole_assoc_4622AE5318E995CA874C160DBEDB5DEB"/>
+                    <End EntitySet="xGMSxTKTDETAILS02" Role="ToRole_assoc_4622AE5318E995CA874C160DBEDB5DEB"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_NomitSet" Association="GMS.TICKET_API_SRV.Actual_Nomit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Nomit"/>
+                    <End EntitySet="ActualNomitSet" Role="ToRole_Actual_Nomit"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_SuccessSet" Association="GMS.TICKET_API_SRV.Actual_Success" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Success"/>
+                    <End EntitySet="ActualSuccessSet" Role="ToRole_Actual_Success"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_ErrorsSet" Association="GMS.TICKET_API_SRV.Actual_Errors" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Errors"/>
+                    <End EntitySet="ActualErrorSet" Role="ToRole_Actual_Errors"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_39E8970AEF8616D55BD1DC9B14D630EA" Association="GMS.TICKET_API_SRV.assoc_39E8970AEF8616D55BD1DC9B14D630EA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="xGMSxTKTDETAILS03" Role="FromRole_assoc_39E8970AEF8616D55BD1DC9B14D630EA"/>
+                    <End EntitySet="xGMSxTKTDETAILS02" Role="ToRole_assoc_39E8970AEF8616D55BD1DC9B14D630EA"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_SuccessFlowSet" Association="GMS.TICKET_API_SRV.Actual_SuccessFlow" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_SuccessFlow"/>
+                    <End EntitySet="ActualSuccessFlowSet" Role="ToRole_Actual_SuccessFlow"/>
+                </AssociationSet>
+                <AssociationSet Name="TicketDetail_ErrorlogSet" Association="GMS.TICKET_API_SRV.TicketDetail_Errorlog" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TicketDetailSet" Role="FromRole_TicketDetail_Errorlog"/>
+                    <End EntitySet="ErrorLogSet" Role="ToRole_TicketDetail_Errorlog"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_LocidSet" Association="GMS.TICKET_API_SRV.Actual_Locid" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Locid"/>
+                    <End EntitySet="ActualLocidSet" Role="ToRole_Actual_Locid"/>
+                </AssociationSet>
+                <AssociationSet Name="SaveTicketCVAssociationSet" Association="GMS.TICKET_API_SRV.SaveTicketCVAssociation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SaveTicket" Role="FromRole_SaveTicketCVAssociation"/>
+                    <End EntitySet="CVParamsSet" Role="ToRole_SaveTicketCVAssociation"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_6B19DFFCC1AC4119EBB95D62E08F261F" Association="GMS.TICKET_API_SRV.assoc_6B19DFFCC1AC4119EBB95D62E08F261F" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="xGMSxTKT_EXEC_TICKETS" Role="FromRole_assoc_6B19DFFCC1AC4119EBB95D62E08F261F"/>
+                    <End EntitySet="I_TicketErrorLog" Role="ToRole_assoc_6B19DFFCC1AC4119EBB95D62E08F261F"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_InputSet" Association="GMS.TICKET_API_SRV.Actual_Input" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Input"/>
+                    <End EntitySet="ActualInputSet" Role="ToRole_Actual_Input"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_TsystSet" Association="GMS.TICKET_API_SRV.Actual_Tsyst" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Tsyst"/>
+                    <End EntitySet="ActualTsystSet" Role="ToRole_Actual_Tsyst"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_DateSet" Association="GMS.TICKET_API_SRV.Actual_Date" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Date"/>
+                    <End EntitySet="ActualDateSet" Role="ToRole_Actual_Date"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_39F8B4DC59FF660B8681C3B20E562915" Association="GMS.TICKET_API_SRV.assoc_39F8B4DC59FF660B8681C3B20E562915" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="xGMSxTKTDATA" Role="FromRole_assoc_39F8B4DC59FF660B8681C3B20E562915"/>
+                    <End EntitySet="xGMSxTKTDETAILS02" Role="ToRole_assoc_39F8B4DC59FF660B8681C3B20E562915"/>
+                </AssociationSet>
+                <AssociationSet Name="HeaderAssociationSet" Association="GMS.TICKET_API_SRV.HeaderAssociation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="CreateTicket" Role="FromRole_HeaderAssociation"/>
+                    <End EntitySet="TicketHeaderSet" Role="ToRole_HeaderAssociation"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_MatnrSet" Association="GMS.TICKET_API_SRV.Actual_Matnr" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Matnr"/>
+                    <End EntitySet="ActualMatnrSet" Role="ToRole_Actual_Matnr"/>
+                </AssociationSet>
+                <AssociationSet Name="ItemsAssociationSet" Association="GMS.TICKET_API_SRV.ItemsAssociation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="CreateTicket" Role="FromRole_ItemsAssociation"/>
+                    <End EntitySet="TicketItemsSet" Role="ToRole_ItemsAssociation"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_NomnrSet" Association="GMS.TICKET_API_SRV.Actual_Nomnr" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Nomnr"/>
+                    <End EntitySet="ActualNomnrSet" Role="ToRole_Actual_Nomnr"/>
+                </AssociationSet>
+                <AssociationSet Name="Ticket_Doc_FLowSet" Association="GMS.TICKET_API_SRV.Ticket_Doc_FLow" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TktlogDetailSet" Role="FromRole_Ticket_Doc_FLow"/>
+                    <End EntitySet="DocFlowSet" Role="ToRole_Ticket_Doc_FLow"/>
+                </AssociationSet>
+                <AssociationSet Name="SaveTicketItemsAssociationSet" Association="GMS.TICKET_API_SRV.SaveTicketItemsAssociation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SaveTicket" Role="FromRole_SaveTicketItemsAssociation"/>
+                    <End EntitySet="TicketItemsSet" Role="ToRole_SaveTicketItemsAssociation"/>
+                </AssociationSet>
+                <AssociationSet Name="Ticket_Head_To_ItemSet" Association="GMS.TICKET_API_SRV.Ticket_Head_To_Item" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TktlogDetailHeadSet" Role="FromRole_Ticket_Head_To_Item"/>
+                    <End EntitySet="TktlogDetailSet" Role="ToRole_Ticket_Head_To_Item"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_ConpatSet" Association="GMS.TICKET_API_SRV.Actual_Conpat" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_Conpat"/>
+                    <End EntitySet="ActualConpatSet" Role="ToRole_Actual_Conpat"/>
+                </AssociationSet>
+                <AssociationSet Name="Actual_NomnrNomitSet" Association="GMS.TICKET_API_SRV.Actual_NomnrNomit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ActualizeTicket" Role="FromRole_Actual_NomnrNomit"/>
+                    <End EntitySet="ActualNomnrNomitSet" Role="ToRole_Actual_NomnrNomit"/>
+                </AssociationSet>
+                <AssociationSet Name="TicketDetail_DocFlowSet" Association="GMS.TICKET_API_SRV.TicketDetail_DocFlow" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TicketDetailSet" Role="FromRole_TicketDetail_DocFlow"/>
+                    <End EntitySet="DocFlowSet" Role="ToRole_TicketDetail_DocFlow"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_8F94C7EF0F37F3D217004E98F567AC75" Association="GMS.TICKET_API_SRV.assoc_8F94C7EF0F37F3D217004E98F567AC75" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="xGMSxTKTDATA" Role="FromRole_assoc_8F94C7EF0F37F3D217004E98F567AC75"/>
+                    <End EntitySet="xGMSxDOCFLOW" Role="ToRole_assoc_8F94C7EF0F37F3D217004E98F567AC75"/>
+                </AssociationSet>
+                <AssociationSet Name="ReturnAssociationSet" Association="GMS.TICKET_API_SRV.ReturnAssociation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="CreateTicket" Role="FromRole_ReturnAssociation"/>
+                    <End EntitySet="returnSet" Role="ToRole_ReturnAssociation"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+                <Annotations Target="GMS.TICKET_API_SRV.GMS_TICKET_API_SRV_Entities"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                </Annotations>
+                <Annotations Target="GMS.TICKET_API_SRV.GMS_TICKET_API_SRV_Entities/xGMSxTICKET_LOGS"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Capabilities.FilterRestrictions">
+                        <Record>
+                            <PropertyValue Property="FilterExpressionRestrictions">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="Property" PropertyPath="ParametersJson"/>
+                                        <PropertyValue Property="AllowedExpressions" String="SearchExpression"/>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_logtkts"/>
+                                        <PropertyValue Property="InsertRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.SortRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonSortableProperties">
+                                <Collection>
+                                    <PropertyPath>ParametersJson</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="GMS.TICKET_API_SRV.GMS_TICKET_API_SRV_Entities/xGMSxTKTDATA"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_bill"/>
+                                        <PropertyValue Property="InsertRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_flow"/>
+                                        <PropertyValue Property="InsertRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="GMS.TICKET_API_SRV.GMS_TICKET_API_SRV_Entities/xGMSxTKTDETAILS03"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_flow"/>
+                                        <PropertyValue Property="InsertRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <Annotations Target="GMS.TICKET_API_SRV.GMS_TICKET_API_SRV_Entities/xGMSxTKT_EXEC_TICKETS"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_docflow"/>
+                                        <PropertyValue Property="InsertRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_errlog"/>
+                                        <PropertyValue Property="InsertRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Insertable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <atom:link rel="self" href="https://vir-s4hana-dev-https:443/sap/opu/odata/gms/TICKET_API_SRV/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    <atom:link rel="latest-version" href="https://vir-s4hana-dev-https:443/sap/opu/odata/gms/TICKET_API_SRV/$metadata"
+                        xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

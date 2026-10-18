@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://vir-s4hana-dev-https:443/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="GMS.NOMLOG_SRV" xml:lang="en" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="GetNomiLog" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="ContractNo"/>
+                    <PropertyRef Name="NominationItem"/>
+                    <PropertyRef Name="Timestamp"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Gas Day" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ContractNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Document No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NominationItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Nom. key item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MsgIndicator" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Message type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DocumentType" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Document Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NominationKey" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Material" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DeliveryPoint" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Delivery Point" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RedelivryPoint" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Redelivery Point" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TransportSystem" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Trans system" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Source" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Source" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ProposedDnq" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom" sap:label="DNQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ApprovedDnq" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom" sap:label="Approved DNQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Uom" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Unit of Measure" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Message" Type="Edm.String" Nullable="false" MaxLength="200" sap:unicode="false" sap:label="Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createdby" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createddate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Created Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createdtime" Type="Edm.Time" Nullable="false" Precision="0" sap:unicode="false" sap:label="Created Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ConfNomiLog" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="ContractNo"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Gas Day" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ContractNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Contract No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="xGMSxCONFIRMNOM_LOGSType" sap:label="iGMS - Nomination Logs" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="ContractNo"/>
+                    <PropertyRef Name="NominationItem"/>
+                    <PropertyRef Name="Timestamp"/>
+                    <PropertyRef Name="MsgIndicator"/>
+                    <PropertyRef Name="LogItem"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
+                <Property Name="ContractNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Document No" sap:quickinfo="Document Number"/>
+                <Property Name="NominationItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="Timestamp" Type="Edm.DateTimeOffset" Nullable="false" Precision="0" sap:label="Short Time Stamp" sap:quickinfo="UTC Time Stamp in Short Form (YYYYMMDDhhmmss)"/>
+                <Property Name="MsgIndicator" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:label="Message type" sap:quickinfo="Message type: S Success, E Error, W Warning, I Info, A Abort"/>
+                <Property Name="LogItem" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Count parameters"/>
+                <Property Name="DocumentType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Document Type"/>
+                <Property Name="NominationKey" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="DeliveryPoint" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Delivery Point"/>
+                <Property Name="RedelivryPoint" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Redelivery Point" sap:quickinfo="Re-Delivery Ponit"/>
+                <Property Name="TransportSystem" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Transport system"/>
+                <Property Name="Source" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Source"/>
+                <Property Name="ProposedDnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="DNQ" sap:quickinfo="daily nomination Quantity"/>
+                <Property Name="ApprovedDnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Approved DNQ"/>
+                <Property Name="Uom" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="Message" Type="Edm.String" MaxLength="200" sap:label="Text" sap:quickinfo="Text for translation"/>
+                <Property Name="Createdby" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Created By"/>
+                <Property Name="Createddate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created Date"/>
+                <Property Name="Createdtime" Type="Edm.Time" Precision="0" sap:label="Created Time"/>
+            </EntityType>
+            <EntityContainer Name="GMS_NOMLOG_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="GetNomLogSet" EntityType="GMS.NOMLOG_SRV.GetNomiLog" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="ConfNomiLogSet" EntityType="GMS.NOMLOG_SRV.ConfNomiLog" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxCONFIRMNOM_LOGS" EntityType="GMS.NOMLOG_SRV.xGMSxCONFIRMNOM_LOGSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="GMS.NOMLOG_SRV.GMS_NOMLOG_SRV_Entities"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+            </Annotations>
+            <atom:link rel="self" href="https://vir-s4hana-dev-https:443/sap/opu/odata/gms/NOMLOG_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://vir-s4hana-dev-https:443/sap/opu/odata/gms/NOMLOG_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

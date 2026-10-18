@@ -1,0 +1,292 @@
+<mvc:View
+    controllerName="com.ingenx.igmsgasflow.controller.dateWiseTicketLogs"
+    displayBlock="true"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:tnt="sap.tnt"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page id="IdDWTLPage" showHeader="false" enableScrolling="false">
+
+        <subHeader>
+            <tnt:ToolHeader id="IdDWTLToolHeader">
+                <Button
+                    id="IdDWTLBackBtn"
+                    icon="sap-icon://nav-back"
+                    type="Transparent"
+                    press="onBackPress"
+                    tooltip="Back to Ticket Logs" />
+                <Title
+                    id="IdDWTLTitle"
+                    text="Execution Details"
+                    level="H3" />
+                <ToolbarSpacer />
+                <ObjectAttribute
+                    id="IdDWTLExecIdAttr"
+                    title="Execution ID"
+                    text="{pageModel>/refId}"
+                    active="false" />
+            </tnt:ToolHeader>
+        </subHeader>
+
+        <content>
+            <layout:FixFlex id="IdDWTLFixFlex" vertical="true" minFlexSize="200">
+
+                <!-- Filter Panel — same pattern as IdANTFilterPanel -->
+                <layout:fixContent>
+                    <Panel id="IdANTFilterPanel2" expandable="false" expanded="true">
+                        <content>
+                            <FlexBox
+                                class="sapUiSmallMarginTop sapUiSmallMarginBottom sapUiSmallMarginBegin sapUiSmallMarginEnd"
+                                justifyContent="SpaceBetween"
+                                alignItems="Center"
+                                wrap="Wrap">
+
+                                <!-- Status filter checkboxes -->
+                                <FlexBox alignItems="Center" wrap="Wrap">
+                                    <Label text="Process Status:" design="Bold" class="sapUiSmallMarginEnd" />
+
+                                    <CheckBox
+                                        id="IdDWTLFilterSuccess"
+                                        text="Success"
+                                        selected="true"
+                                        select="onDWTLStatusFilterChange"
+                                        class="sapUiSmallMarginEnd" />
+
+                                    <CheckBox
+                                        id="IdDWTLFilterWarning"
+                                        text="Warning"
+                                        selected="true"
+                                        select="onDWTLStatusFilterChange"
+                                        class="sapUiSmallMarginEnd" />
+
+                                    <CheckBox
+                                        id="IdDWTLFilterError"
+                                        text="Error"
+                                        selected="true"
+                                        select="onDWTLStatusFilterChange"
+                                        class="sapUiSmallMarginEnd" />
+
+                                    <CheckBox
+                                        id="IdDWTLFilterPartial"
+                                        text="Partial"
+                                        selected="true"
+                                        select="onDWTLStatusFilterChange"
+                                        class="sapUiSmallMarginEnd" />
+
+                                    <CheckBox
+                                        id="IdDWTLFilterNotCompleted"
+                                        text="Not Completed"
+                                        selected="true"
+                                        select="onDWTLStatusFilterChange"
+                                        class="sapUiSmallMarginEnd" />
+                                </FlexBox>
+
+                                <!-- Summary counters -->
+                                <FlexBox alignItems="Center" wrap="Wrap">
+                                    <ObjectStatus
+                                        id="IdDWTLSuccessCount"
+                                        title="Success"
+                                        text="{pageModel>/successCount}"
+                                        state="Success"
+                                        class="sapUiSmallMarginEnd" />
+                                    <ObjectStatus
+                                        id="IdDWTLErrorCount"
+                                        title="Errors"
+                                        text="{pageModel>/errorCount}"
+                                        state="Error"
+                                        class="sapUiSmallMarginEnd" />
+                                    <ObjectStatus
+                                        id="IdDWTLWarningCount"
+                                        title="Warnings"
+                                        text="{pageModel>/warningCount}"
+                                        state="Warning"
+                                        class="sapUiSmallMarginEnd" />
+                                    <ToolbarSeparator />
+                                    <Button
+                                        id="IdDWTLSelectAllBtn"
+                                        text="Select All"
+                                        type="Transparent"
+                                        press="onDWTLSelectAll"
+                                        class="sapUiTinyMarginEnd" />
+                                    <Button
+                                        id="IdDWTLClearAllBtn"
+                                        text="Clear All"
+                                        type="Transparent"
+                                        press="onDWTLClearAll" />
+                                </FlexBox>
+                            </FlexBox>
+                        </content>
+                    </Panel>
+                </layout:fixContent>
+
+                <!-- sap.ui.table.Table -->
+                <layout:flexContent >
+                   <VBox class="antFilterPanel" height="97%" width="99%">
+                   
+                     <table:Table
+                        id="IdDWTLMainTable"
+                        rows="{ticketLogDataModel>/}"
+                        visibleRowCountMode="Auto"
+                        minAutoRowCount="11"
+                        selectionMode="None"
+                        alternateRowColors="true"
+                        cellClick="onTicketRowPress">
+
+                        <table:noData>
+                            <IllustratedMessage
+                                id="IdDWTLNoDataMsg"
+                                illustrationSize="Small"
+                                illustrationType="sapIllus-NoData"
+                                title="No data found"
+                                description="No ticket entries found for this execution." />
+                        </table:noData>
+
+                        <table:extension>
+                            <Toolbar id="IdDWTLTableToolbar">
+                                <Title
+                                    id="IdDWTLTableTitle"
+                                    text="Ticket Execution Details"
+                                    level="H3" />
+                                <ToolbarSpacer />
+                                <Button
+                                    id="IdDWTLRefreshBtn"
+                                    icon="sap-icon://refresh"
+                                    type="Transparent"
+                                    tooltip="Refresh"
+                                    press="onDWTLRefresh" />
+                            </Toolbar>
+                        </table:extension>
+
+                        <table:columns>
+
+                            <!-- Ticket Key -->
+                            <table:Column
+                                id="IdDWTLTicketKeyCol"
+                                width="10rem"
+                                sortProperty="TicketKey"
+                                filterProperty="TicketKey">
+                                <table:label><Label text="Ticket Key" design="Bold" /></table:label>
+                                <table:template><Text text="{path: 'ticketLogDataModel>TicketKey', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Ticket Item -->
+                            <table:Column
+                                id="IdDWTLTicketItemCol"
+                                width="8rem"
+                                hAlign="End"
+                                sortProperty="TicketItem">
+                                <table:label><Label text="Ticket Item" design="Bold" /></table:label>
+                                <table:template><Text text="{ticketLogDataModel>TicketItem}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Ticket Version -->
+                            <table:Column
+                                id="IdDWTLTicketVersionCol"
+                                width="7rem"
+                                hAlign="End"
+                                sortProperty="TicketVersion">
+                                <table:label><Label text="Version" design="Bold" /></table:label>
+                                <table:template><Text text="{path: 'ticketLogDataModel>TicketVersion', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Purpose -->
+                            <table:Column
+                                id="IdDWTLPurposeCol"
+                                width="7rem"
+                                sortProperty="Purpose"
+                                filterProperty="Purpose">
+                                <table:label><Label text="Purpose" design="Bold" /></table:label>
+                                <table:template><Text text="{ticketLogDataModel>Purpose}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Nomination Key -->
+                            <table:Column
+                                id="IdDWTLNomtkCol"
+                                width="10rem"
+                                sortProperty="Nomtk"
+                                filterProperty="Nomtk">
+                                <table:label><Label text="Nomination Key" design="Bold" /></table:label>
+                                <table:template><Text text="{path: 'ticketLogDataModel>Nomtk', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Nomination Item -->
+                            <table:Column
+                                id="IdDWTLNomitCol"
+                                width="9rem"
+                                hAlign="End"
+                                sortProperty="Nomit">
+                                <table:label><Label text="Nomination Item" design="Bold" /></table:label>
+                                <table:template><Text text="{ticketLogDataModel>Nomit}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Process Status -->
+                            <table:Column
+                                id="IdDWTLStatusCol"
+                                width="9rem"
+                                sortProperty="ProcessStatus"
+                                filterProperty="ProcessStatus">
+                                <table:label><Label text="Status" design="Bold" /></table:label>
+                                <table:template>
+                                    <ObjectStatus
+                                        text="{path: 'ticketLogDataModel>ProcessStatus', formatter: '.formatStatusText'}"
+                                        state="{path: 'ticketLogDataModel>ProcessStatus', formatter: '.formatStatusState'}"
+                                        icon="{path: 'ticketLogDataModel>ProcessStatus', formatter: '.formatStatusIcon'}" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Message Summary — bound directly to the backend's own
+                                 MessageSummary field, no combination/suppression logic. -->
+                            <table:Column
+                                id="IdDWTLMessageCol"
+                                width="auto"
+                                minWidth="200"
+                                filterProperty="MessageSummary">
+                                <table:label><Label text="Message Summary" design="Bold" /></table:label>
+                                <table:template>
+                                    <Link
+                                        text="{ticketLogDataModel>MessageSummary}"
+                                        wrapping="false"
+                                        visible="{path: 'ticketLogDataModel>MessageSummary', formatter: '.formatHasValue'}"
+                                        press="onMessageSummaryLinkPress" />
+                                </table:template>
+                            </table:Column>
+
+                            <!-- Created At -->
+                            <table:Column
+                                id="IdDWTLCreatedAtCol"
+                                width="11rem"
+                                sortProperty="_createdTs">
+                                <table:label><Label text="Created At" design="Bold" /></table:label>
+                                <table:template><Text text="{ticketLogDataModel>_createdAt}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Changed At -->
+                            <table:Column
+                                id="IdDWTLChangedAtCol"
+                                width="11rem"
+                                sortProperty="_changedTs">
+                                <table:label><Label text="Changed At" design="Bold" /></table:label>
+                                <table:template><Text text="{ticketLogDataModel>_changedAt}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <!-- Last Changed -->
+                            <table:Column
+                                id="IdDWTLLastChangedCol"
+                                width="11rem"
+                                sortProperty="_ts">
+                                <table:label><Label text="Last Changed" design="Bold" /></table:label>
+                                <table:template><Text text="{ticketLogDataModel>_lastChanged}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                        </table:columns>
+                    </table:Table>
+                   </VBox>
+                </layout:flexContent>
+
+            </layout:FixFlex>
+        </content>
+    </Page>
+</mvc:View>

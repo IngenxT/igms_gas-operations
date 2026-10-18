@@ -1,0 +1,80 @@
+/* ── Confirm Schedule Nomination — Row colouring by Source ──────────────── */
+
+.csnSrcSystem   .sapUiTableCell { background-color: #8ec8ef !important; }
+.csnSrcManual   .sapUiTableCell { background-color: #f9c47a !important; }
+.csnSrcCustomer .sapUiTableCell { background-color: #6ecfb2 !important; }
+
+/* ── Aggregation box in sub-header ──────────────────────────────────────── */
+.csnAggBox {
+    border: 1px solid #c5c6c7;
+    border-radius: 6px;
+    padding: 4px 16px;
+    margin: 0 8px;
+    background-color: rgba(255, 255, 255, 0.08);
+    gap: 0;
+}
+
+.csnAggSide {
+    padding: 2px 4px;
+}
+
+.csnAggLabel {
+    font-size: 0.75rem;
+    color: #6a6d70;
+    white-space: nowrap;
+}
+
+.csnAggDivider {
+    display: inline-block;
+    width: 1px;
+    height: 32px;
+    background-color: #c5c6c7;
+    margin: 0 8px;
+    align-self: center;
+}
+
+/* ── Legend icons (same palette as BNS) ─────────────────────────────────── */
+.csnLegendIcon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.csnLegendIconSystem   { background-color: #8ec8ef; border: 1.5px solid #0072B2; }
+.csnLegendIconManual   { background-color: #f9c47a; border: 1.5px solid #B85C00; }
+.csnLegendIconCustomer { background-color: #6ecfb2; border: 1.5px solid #007A52; }
+
+/* ── Confirm Nomination — progress dialog ───────────────────────────────── */
+/* Spacing follows the SAPUI5 "Responsive Margin and Padding" scale — Tiny =
+   0.5rem, Small = 1rem, Medium = 2rem, Large = 3rem — matching the
+   sapUiXxxMargin utility classes already applied to this box's children in
+   the controller, so padding here and margin there stay on the same grid.
+   Colors use SAP theming parameters (not hardcoded hex) so the dialog stays
+   correct across Fiori themes, including dark/high-contrast. */
+.csnBulkProgressBox {
+    border: 1px solid var(--sapList_BorderColor);
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background-color: var(--sapGroup_ContentBackground);
+}
+
+.csnBulkProgressTotal {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--sapTextColor);
+}
+
+/* The status message itself is now an sap.m.MessageStrip (native Fiori
+   border/background/icon/semantic color per type) instead of styled Text —
+   no custom CSS needed for it; see the controller. */
+
+/* Small (1rem) top margin — enough visual separation to read the bar as its
+   own element below the status text, rather than Tiny's tightly-coupled
+   label+value spacing. */
+.csnBulkProgressBar {
+    margin-top: 1rem;
+}
+
+.csnBulkProgressBar .sapMPI {
+    border-radius: 0.25rem;
+}

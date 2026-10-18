@@ -1,0 +1,191 @@
+/* ── Full-height layout ───────────────────────────────────────── */
+
+/* FixFlex must fill the Page content area (Page has enableScrolling=false) */
+.bnsFixFlex {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* flex child: prevent it from growing beyond available space */
+.bnsFixFlex .sapUiFixFlexFlex {
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Table stretches to fill the flex remainder */
+.bnsFixFlex .sapUiFixFlexFlex .bnsTableContainer {
+    flex: 1 1 0;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* ── Filter Panel ─────────────────────────────────────────────── */
+.bnsFilterPanel {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: rgba(60, 64, 67, 0.1) 0px 1px 3px 0px,
+                rgba(60, 64, 67, 0.08) 0px 1px 2px 0px;
+    margin: 8px 8px 6px 8px;
+    box-sizing: border-box;
+}
+
+/* Remove default Panel header border when no header is used */
+.bnsFilterPanel .sapMPanelContent {
+    padding: 8px 12px 4px 12px;
+    border-top: none;
+}
+
+/* ── Table Container ──────────────────────────────────────────── */
+.bnsTableContainer {
+    border: 1px solid #e0e0e0;
+    border-radius : 0.2rem;
+    box-shadow: rgba(60, 64, 67, 0.1) 0px 1px 3px 0px,
+                rgba(60, 64, 67, 0.08) 0px 1px 2px 0px;
+    margin: 0 8px 8px 8px;
+    box-sizing: border-box;
+}
+
+/* Column header background */
+.bnsTableContainer .sapUiTableColHdrCnt {
+    background-color: #f5f6f8;
+    border-bottom: 2px solid #d1d5db;
+}
+
+/* Column header text */
+.bnsTableContainer .sapUiTableColHdrTr .sapUiTableCell {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.8rem;
+}
+
+/* Alternate row shading */
+.bnsTableContainer .sapUiTableRowAlternate .sapUiTableCell {
+    background-color: #fafbfc;
+}
+
+/* Row hover */
+.bnsTableContainer .sapUiTableDataRow:hover .sapUiTableCell {
+    background-color: #eef2ff !important;
+}
+
+
+.filterArea{
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 13px 0px;
+    padding: 10px;
+    width: 99%;
+    margin: 0.8% 0.5% 0.5% 0.5%;
+    border-radius: 8px;
+    background-color: #fff;
+}
+.tableLayout{
+   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.ucUserName {
+    font-weight: 600 !important;
+    color: #1a1a2e !important;
+    font-size: 13px !important;
+}
+.ucUserEmail {
+    font-size: 11px !important;
+    color: #8a96a3 !important;
+}
+
+/* annual plan Dialog css */
+.ucDialog .sapMDialogTitle {
+    font-weight: 700 !important;
+}
+.ucDialogSubtitle {
+    font-size: 12px !important;
+    color: #6c7a8a !important;
+}
+.ucFormBody {
+    background: #fafbfc;
+    border-radius: 8px;
+    padding: 4px !important;
+}
+.ucFormField {
+    min-width: 210px;
+    flex: 1;
+}
+.ucFieldLabel {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.4px !important;
+    text-transform: uppercase !important;
+    color: #5a6472 !important;
+    margin-bottom: 4px !important;
+}
+.ucReadonlyInput .sapMInputBaseInner {
+    background: #f0f2f5 !important;
+    color: #8a96a3 !important;
+    font-style: italic !important;
+}
+.ucStatusRow {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px dashed #d0d7de;
+}
+.ucStatusStrip {
+    flex: 1;
+    margin-left: 16px !important;
+}
+
+/* ── Source legend in toolbar ─────────────────────────────────── */
+.bnsLegendBox { gap: 6px; }
+
+.bnsLegendIcon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.bnsLegendIconSystem   { background-color: #8ec8ef; border: 1.5px solid #0072B2; }
+.bnsLegendIconManual   { background-color: #f9c47a; border: 1.5px solid #B85C00; }
+.bnsLegendIconCustomer { background-color: #6ecfb2; border: 1.5px solid #007A52; }
+
+.bnsLegendSwatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+.bnsSwatchConfirmed { background-color: #38a169; border: 1.5px solid #276749; }
+
+.bnsLegendLabel .sapMText {
+    font-size: 0.75rem;
+    color: #4a4a4a;
+}
+
+/* ── Source-based row colouring (Wong colorblind-safe palette) ── */
+.bnsRowSystem   .sapUiTableCell { background-color: #8ec8ef !important; }
+.bnsRowManual   .sapUiTableCell { background-color: #f9c47a !important; }
+.bnsRowCustomer .sapUiTableCell { background-color: #6ecfb2 !important; }
+
+/* Hover: darken each */
+.bnsRowSystem:hover   .sapUiTableCell { background-color: #67b2e4 !important; }
+.bnsRowManual:hover   .sapUiTableCell { background-color: #f5ab4e !important; }
+.bnsRowCustomer:hover .sapUiTableCell { background-color: #45bc99 !important; }
+
+/* ── Source cell-level icon/text colours ─────────────────────── */
+.systemSource   .sapUiIcon, .systemSource   .sapMText { color: #0072B2 !important; }
+.manualSource   .sapUiIcon, .manualSource   .sapMText { color: #B85C00 !important; }
+.customerSource .sapUiIcon, .customerSource .sapMText { color: #007A52 !important; }
+
+/* ── Prop DNQ aggregate value in toolbar ──────────────────────── */
+.bnsAggQtyValue {
+    background-color: #e8f1fb;
+    border: 1px solid #c0d9f7;
+    border-radius: 4px;
+    padding: 2px 10px;
+    display: inline-flex !important;
+    align-items: center;
+    white-space: nowrap;
+}

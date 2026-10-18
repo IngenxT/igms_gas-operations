@@ -1,0 +1,49 @@
+<mvc:View controllerName="com.ingenx.igmsgasflow.controller.Home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+        <content>
+            <GenericTile
+                id="BalancingScheduling-Tile"
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+                header="{i18n>balancingScheduling}"
+                press="onBalancing"
+            >
+                <TileContent id="BalancingSchedulingTileCont">
+                    <ImageContent
+                        id="BalancingSchedulingTileImg"
+                        src="sap-icon://business-by-design"
+                    />
+                </TileContent>
+            </GenericTile>
+
+            <GenericTile
+                id="AllocationNTicketing-Tile"
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+                header="{i18n>allocationNTicketing}"
+                press="onAllocationNTicketing"
+            >
+                <TileContent id="AllocationNTicketingTileCont">
+                    <ImageContent
+                        id="AllocationNTicketingTileImg"
+                        src="sap-icon://measurement-document"
+                    />
+                </TileContent>
+            </GenericTile>
+
+            <GenericTile
+                id="TicketLogs-Tile"
+                class="sapUiTinyMarginBegin sapUiTinyMarginTop"
+                header="{i18n>TicketLogs}"
+                press="onPressTicketLogsTile"
+            >
+                <TileContent id="TicketLogsTileCont">
+                    <ImageContent
+                        id="TicketLogsTileImg"
+                        src="sap-icon://currency"
+                    />
+                </TileContent>
+            </GenericTile>
+        </content>
+    </Page>
+</mvc:View>

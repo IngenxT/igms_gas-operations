@@ -1,0 +1,250 @@
+/* ── Full-height layout ───────────────────────────────────────── */
+
+.antFixFlex {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.antFixFlex .sapUiFixFlexFlex {
+    min-height: 0;
+    overflow: hidden;
+}
+.balancingBtn{
+    margin-top: 38px !important;
+}
+
+/* ── Filter Panel (~10 vh) ────────────────────────────────────── */
+
+.antFilterPanel {
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 13px 0px;
+    padding: 10px;
+    width: 99%;
+    margin: 0.8% 0.5% 0.5% 0.5%;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.antFilterPanel .sapMPanelContent {
+    padding: 8px 12px 4px 12px;
+    border-top: none;
+}
+
+.iconTabbarArea{
+   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 13px 0px;
+    padding: 10px;
+    width: 97.5%;
+    /* margin: 0.8% 0.5% 0.5% 0.5%; */
+    border-radius: 8px;
+    margin: 0px 0.5%;
+    background-color: #fff; 
+}
+
+/* ── Content Root: flex column filling the flex remainder ─────── */
+
+.antFixFlex .anaContentRoot {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.antFixFlex .anaContentRoot > .sapMVBoxItem {
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* SCADA section: 33% of the 90vh flex area ≈ 30vh of viewport */
+.antFixFlex .anaContentRoot > .sapMVBoxItem:first-child {
+    height: 33.333%;
+    flex: none !important;
+}
+
+/* IconTabBar section: 66% of the 90vh flex area ≈ 60vh of viewport */
+.antFixFlex .anaContentRoot > .sapMVBoxItem:last-child {
+    height: 66.666%;
+    flex: none !important;
+}
+
+/* ── SCADA Section ────────────────────────────────────────────── */
+
+.antFixFlex .anaScadaSection {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* OverflowToolbar natural height; table fills the rest */
+.antFixFlex .anaScadaSection > .sapMVBoxItem:last-child {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── Tab Section ──────────────────────────────────────────────── */
+
+.antFixFlex .anaTabSection {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.antFixFlex .anaTabSection > .sapMVBoxItem {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* IconTabBar fills the tab section */
+.antFixFlex .anaIconTabBar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.antFixFlex .anaIconTabBar .sapMITBContent {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Tab content VBox */
+.antFixFlex .AllocTicketTabContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* OverflowToolbar natural height; table fills the rest */
+.antFixFlex .AllocTicketTabContent > .sapMVBoxItem:first-child {
+    flex: none;
+}
+
+.antFixFlex .AllocTicketTabContent > .sapMVBoxItem:last-child {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+
+
+/* ── Table Container ──────────────────────────────────────────── */
+.antFilterPanel .sapMITBContent,
+.antFilterPanel .sapMITBContainerContent {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.antFilterPanel,
+.antFilterPanel .sapMITB,
+.antFilterPanel .sapMITBContainerContent,
+.antFilterPanel .sapMITBContent {
+    height: 100%;
+}
+
+.AllocTicketTabContent {
+    height: 100%;
+}
+
+.anaTableContainer {
+    height: calc(100% - 3rem);
+}
+
+/* Column header background */
+.antFixFlex .anaTableContainer .sapUiTableColHdrCnt {
+    background-color: #f5f6f8;
+    border-bottom: 2px solid #d1d5db;
+}
+
+/* Column header text */
+.antFixFlex .anaTableContainer .sapUiTableColHdrTr .sapUiTableCell {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.8rem;
+}
+
+/* Alternate row shading */
+.antFixFlex .anaTableContainer .sapUiTableRowAlternate .sapUiTableCell {
+    background-color: #fafbfc;
+}
+
+/* Row hover */
+.antFixFlex .anaTableContainer .sapUiTableDataRow:hover .sapUiTableCell {
+    background-color: #eef2ff !important;
+}
+
+/* Legend */
+.antLegendBox { gap: 6px; }
+
+.antLegendIcon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.antLegendIconSystem  { background-color: #8ec8ef; border: 1.5px solid #0072B2; }
+.antLegendIconManual  { background-color: #f9c47a; border: 1.5px solid #B85C00; }
+.antLegendIconPortal  { background-color: #6ecfb2; border: 1.5px solid #007A52; }
+.antLegendIconNoRank  { background-color: #f5b8b8; border: 1.5px solid #cc0000; }
+
+.antLegendLabel .sapMText {
+    font-size: 0.75rem;
+    color: #4a4a4a;
+}
+
+/* Source-based row coloring */
+.antRowSystem .sapUiTableCell  { background-color: #8ec8ef !important; }
+.antRowManual .sapUiTableCell  { background-color: #f9c47a !important; }
+.antRowPortal .sapUiTableCell  { background-color: #6ecfb2 !important; }
+.antRowNoRank .sapUiTableCell  { background-color: #f5b8b8 !important; }
+.antRowSystem:hover .sapUiTableCell { background-color: #72b9e8 !important; }
+.antRowManual:hover .sapUiTableCell { background-color: #f7b254 !important; }
+.antRowPortal:hover .sapUiTableCell { background-color: #4ec4a4 !important; }
+.antRowNoRank:hover .sapUiTableCell { background-color: #f09898 !important; }
+
+/* Allocated Qty cell fill — Delivery Point vs Redelivery Point contract. Distinct
+   hues from the row Source coloring above (blue/orange/green/red already taken) so
+   the two colorings never read as the same signal. sap.m.Input's visible box is
+   .sapMInputBaseInner, nested inside the class we bind on the control's root. */
+.antAllocDeliveryCell.sapMInputBase .sapMInputBaseInner {
+    background-color: #d4b8e8 !important;
+}
+.antAllocRedeliveryCell.sapMInputBase .sapMInputBaseInner {
+    background-color: #f5e6a3 !important;
+}
+
+/* Data Issues Dialog — Already Ticketed panel */
+.antTicketedPanel .antTicketedPanelHeader {
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #d5d5d5;
+}
+.antTicketedPanelIcon {
+    color: #555555;
+}
+
+/* ── GDA SCADA Reading tables (fixed row count, inside antFilterPanel) ─── */
+.antGdaTable .sapUiTableColHdrCnt {
+    background-color: #f5f6f8;
+    border-bottom: 2px solid #d1d5db;
+}
+.antGdaTable .sapUiTableColHdrTr .sapUiTableCell {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.8rem;
+}
+.antGdaTable .sapUiTableRowAlternate .sapUiTableCell {
+    background-color: #fafbfc;
+}
+.antGdaTable .sapUiTableDataRow:hover .sapUiTableCell {
+    background-color: #eef2ff !important;
+}
+
+/* ── Hybrid / Entry Point: only GROUP (Business Location) rows are selectable ── */
+.antGdaTable .antGdaNoSelect {
+    visibility: hidden;
+    pointer-events: none;
+}

@@ -1,0 +1,155 @@
+<mvc:View
+    controllerName="com.ingenx.igmsgasflow.controller.ticketingRunLogs"
+    displayBlock="true"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:rowmodes="sap.ui.table.rowmodes"
+    xmlns:tnt="sap.tnt"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page id="IdTRLPage" showHeader="false" enableScrolling="false">
+
+        <subHeader>
+            <tnt:ToolHeader id="IdTRLToolHeader">
+                <Button
+                    id="IdTRLBackBtn"
+                    icon="sap-icon://nav-back"
+                    type="Transparent"
+                    press=".onNavBack"
+                    tooltip="{i18n>trlBackTooltip}" />
+                <Title id="IdTRLTitle" text="{i18n>trlPageTitle}" level="H3" />
+                <ToolbarSpacer />
+                <ObjectAttribute id="IdTRLGasdayAttr" title="{i18n>trlGasday}" text="{runModel>/gasday}" />
+                <ObjectAttribute id="IdTRLJobIdAttr" title="{i18n>trlJobId}" text="{runModel>/jobId}" />
+            </tnt:ToolHeader>
+        </subHeader>
+
+        <content>
+            <layout:FixFlex id="IdTRLFixFlex" vertical="true" minFlexSize="200">
+
+                <layout:fixContent>
+                    <Panel id="IdTRLFilterPanel" expandable="false" expanded="true">
+                        <content>
+                            <FlexBox
+                                class="sapUiSmallMarginTop sapUiSmallMarginBottom sapUiSmallMarginBegin sapUiSmallMarginEnd"
+                                justifyContent="SpaceBetween"
+                                alignItems="Center"
+                                wrap="Wrap">
+
+                                <FlexBox alignItems="Center" wrap="Wrap">
+                                    <Label text="{i18n>trlProcessStatus}" design="Bold" class="sapUiSmallMarginEnd" />
+                                    <CheckBox id="IdTRLFilterSuccess" text="{i18n>trlStatusSuccess}" selected="true" select=".onStatusFilterChange" class="sapUiSmallMarginEnd" />
+                                    <CheckBox id="IdTRLFilterWarning" text="{i18n>trlStatusWarning}" selected="true" select=".onStatusFilterChange" class="sapUiSmallMarginEnd" />
+                                    <CheckBox id="IdTRLFilterError" text="{i18n>trlStatusError}" selected="true" select=".onStatusFilterChange" class="sapUiSmallMarginEnd" />
+                                    <CheckBox id="IdTRLFilterPartial" text="{i18n>trlStatusPartial}" selected="true" select=".onStatusFilterChange" class="sapUiSmallMarginEnd" />
+                                    <CheckBox id="IdTRLFilterNotCompleted" text="{i18n>trlStatusNotCompleted}" selected="true" select=".onStatusFilterChange" class="sapUiSmallMarginEnd" />
+                                </FlexBox>
+
+                                <FlexBox alignItems="Center" wrap="Wrap">
+                                    <ObjectStatus id="IdTRLSuccessCount" title="{i18n>trlStatusSuccess}" text="{runModel>/successCount}" state="Success" class="sapUiSmallMarginEnd" />
+                                    <ObjectStatus id="IdTRLErrorCount" title="{i18n>trlStatusError}" text="{runModel>/errorCount}" state="Error" class="sapUiSmallMarginEnd" />
+                                    <ObjectStatus id="IdTRLWarningCount" title="{i18n>trlStatusWarning}" text="{runModel>/warningCount}" state="Warning" class="sapUiSmallMarginEnd" />
+                                    <ObjectStatus id="IdTRLPendingCount" title="{i18n>trlStatusNotCompleted}" text="{runModel>/pendingCount}" state="None" class="sapUiSmallMarginEnd" />
+                                </FlexBox>
+                            </FlexBox>
+                        </content>
+                    </Panel>
+                </layout:fixContent>
+
+                <layout:flexContent>
+                    <table:Table
+                        id="IdTRLMainTable"
+                        rows="{runRowsModel>/}"
+                        selectionMode="None"
+                        alternateRowColors="true"
+                        enableColumnReordering="true">
+
+                        <table:rowMode>
+                            <rowmodes:Auto minRowCount="10" />
+                        </table:rowMode>
+
+                        <table:noData>
+                            <IllustratedMessage
+                                id="IdTRLNoDataMsg"
+                                illustrationSize="Small"
+                                illustrationType="sapIllus-NoData"
+                                title="{i18n>trlNoDataTitle}"
+                                description="{i18n>trlNoDataText}" />
+                        </table:noData>
+
+                        <table:extension>
+                            <OverflowToolbar id="IdTRLTableToolbar">
+                                <Title id="IdTRLTableTitle" text="{runModel>/tableTitle}" level="H3" />
+                                <ToolbarSpacer />
+                                <Button
+                                    id="IdTRLRefreshBtn"
+                                    icon="sap-icon://refresh"
+                                    type="Transparent"
+                                    tooltip="{i18n>trlRefresh}"
+                                    press=".onRefresh" />
+                            </OverflowToolbar>
+                        </table:extension>
+
+                        <table:columns>
+                            <table:Column id="IdTRLGasdayCol" width="8rem" visible="{runModel>/multiDay}" sortProperty="_gasDay">
+                                <table:label><Label text="{i18n>trlGasday}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Text text="{runRowsModel>_gasDay}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                            <table:Column id="IdTRLNomtkCol" width="10rem" sortProperty="Nomtk" filterProperty="Nomtk">
+                                <table:label><Label text="{i18n>trlColNomKey}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Link
+                                        text="{path: 'runRowsModel>Nomtk', formatter: '.formatKeyNoLeadingZeros'}"
+                                        wrapping="false"
+                                        press=".onRunNomKeyPress"
+                                        tooltip="{i18n>trlNomKeyTooltip}" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column id="IdTRLNomitCol" width="9rem" hAlign="End" sortProperty="Nomit">
+                                <table:label><Label text="{i18n>trlColNomItem}" design="Bold" /></table:label>
+                                <table:template><Text text="{path: 'runRowsModel>Nomit', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <table:Column id="IdTRLTicketKeyCol" width="10rem" sortProperty="TicketKey" filterProperty="TicketKey">
+                                <table:label><Label text="{i18n>trlColTicketKey}" design="Bold" /></table:label>
+                                <table:template><Text text="{path: 'runRowsModel>TicketKey', formatter: '.formatKeyNoLeadingZeros'}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <table:Column id="IdTRLTicketItemCol" width="8rem" hAlign="End" sortProperty="TicketItem">
+                                <table:label><Label text="{i18n>trlColTicketItem}" design="Bold" /></table:label>
+                                <table:template><Text text="{runRowsModel>TicketItem}" wrapping="false" /></table:template>
+                            </table:Column>
+
+                            <table:Column id="IdTRLStatusCol" width="10rem" sortProperty="ProcessStatus" filterProperty="ProcessStatus">
+                                <table:label><Label text="{i18n>trlColStatus}" design="Bold" /></table:label>
+                                <table:template>
+                                    <ObjectStatus
+                                        text="{path: 'runRowsModel>ProcessStatus', formatter: '.formatStatusText'}"
+                                        state="{path: 'runRowsModel>ProcessStatus', formatter: '.formatStatusState'}"
+                                        icon="{path: 'runRowsModel>ProcessStatus', formatter: '.formatStatusIcon'}" />
+                                </table:template>
+                            </table:Column>
+
+                            <table:Column id="IdTRLMessageCol" width="auto" minWidth="240" filterProperty="MessageSummary">
+                                <table:label><Label text="{i18n>trlColMessage}" design="Bold" /></table:label>
+                                <table:template>
+                                    <Link
+                                        text="{runRowsModel>MessageSummary}"
+                                        wrapping="false"
+                                        visible="{path: 'runRowsModel>MessageSummary', formatter: '.formatHasValue'}"
+                                        press=".onMessageSummaryLinkPress"
+                                        tooltip="{i18n>trlShowDetails}" />
+                                </table:template>
+                            </table:Column>
+                        </table:columns>
+                    </table:Table>
+                </layout:flexContent>
+
+            </layout:FixFlex>
+        </content>
+    </Page>
+</mvc:View>

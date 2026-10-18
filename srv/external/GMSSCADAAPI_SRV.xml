@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.119.82.103:8001/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="GMS.SCADAAPI_SRV" xml:lang="en" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="ScadaUpload" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="scadaupload"/>
+                </Key>
+                <Property Name="scadaupload" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="to_scadaitems" Relationship="GMS.SCADAAPI_SRV.to_scadaitems" FromRole="FromRole_to_scadaitems" ToRole="ToRole_to_scadaitems"/>
+            </EntityType>
+            <EntityType Name="ScadaField" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Versn"/>
+                    <PropertyRef Name="Streamid"/>
+                    <PropertyRef Name="Businesslocation"/>
+                    <PropertyRef Name="Gasday"/>
+                </Key>
+                <Property Name="Versn" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Customer" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Meterreading" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Meter Reading" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Streamid" Type="Edm.String" Nullable="false" MaxLength="7" sap:unicode="false" sap:label="Stream ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Businesslocation" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Location ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Relativehumidity" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Relative Humidity" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Gas Day" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Streamflow" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Stream Flow" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Actualgcv" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Actual GCV" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Actualncv" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Actual NCV" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Averagegcv" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Average Gas CV" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Averagencv" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Average Net CV" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Schedulematerial" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Sched.Material" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Unit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Floatingtemp" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Pressure" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createddate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Created Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createdtime" Type="Edm.Time" Nullable="false" Precision="0" sap:unicode="false" sap:label="Created Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createdby" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Changedby" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Changed By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Changeddate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Change Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Changedtime" Type="Edm.Time" Nullable="false" Precision="0" sap:unicode="false" sap:label="Change Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="xGMSxscada_apiType" sap:label="GMS Scada type" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Streamid"/>
+                    <PropertyRef Name="Businesslocation"/>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="Customer"/>
+                    <PropertyRef Name="Versn"/>
+                </Key>
+                <Property Name="Streamid" Type="Edm.String" Nullable="false" MaxLength="7" sap:display-format="UpperCase" sap:label="Stream ID"/>
+                <Property Name="Businesslocation" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Location ID"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
+                <Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer No"/>
+                <Property Name="Versn" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Version"/>
+                <Property Name="Actualgcv" Type="Edm.Double" sap:label="Actual GCV"/>
+                <Property Name="Actualncv" Type="Edm.Double" sap:label="Actual NCV"/>
+                <Property Name="Averagegcv" Type="Edm.Double" sap:label="Average Gas CV" sap:quickinfo="Average GCV"/>
+                <Property Name="Averagencv" Type="Edm.Double" sap:label="Average Net CV" sap:quickinfo="Average NCV"/>
+                <Property Name="Schedulematerial" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Scheduled material"/>
+                <Property Name="Unit" Type="Edm.String" MaxLength="3" sap:label="UOM" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="Floatingtemp" Type="Edm.Double" sap:label="Temperature"/>
+                <Property Name="Pressure" Type="Edm.Double" sap:label="Pressure"/>
+                <Property Name="Relativehumidity" Type="Edm.Double" sap:label="Relative Humidity"/>
+                <Property Name="Streamflow" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Stream Flow" sap:quickinfo="Stream Direction Flow"/>
+                <Property Name="Meterreading" Type="Edm.Double" sap:label="Meter Reading" sap:quickinfo="Scada Meter Reading"/>
+            </EntityType>
+            <Association Name="to_scadaitems" sap:content-version="1">
+                <End Type="GMS.SCADAAPI_SRV.ScadaUpload" Multiplicity="1" Role="FromRole_to_scadaitems"/>
+                <End Type="GMS.SCADAAPI_SRV.ScadaField" Multiplicity="*" Role="ToRole_to_scadaitems"/>
+            </Association>
+            <EntityContainer Name="GMS_SCADAAPI_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="xGMSxscada_api" EntityType="GMS.SCADAAPI_SRV.xGMSxscada_apiType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ScadaUploadSet" EntityType="GMS.SCADAAPI_SRV.ScadaUpload" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ScadaFieldSet" EntityType="GMS.SCADAAPI_SRV.ScadaField" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="to_scadaitemsSet" Association="GMS.SCADAAPI_SRV.to_scadaitems" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ScadaUploadSet" Role="FromRole_to_scadaitems"/>
+                    <End EntitySet="ScadaFieldSet" Role="ToRole_to_scadaitems"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+                <Annotations Target="GMS.SCADAAPI_SRV.GMS_SCADAAPI_SRV_Entities"
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                </Annotations>
+                <atom:link rel="self" href="http://20.119.82.103:8001/sap/opu/odata/gms/SCADAAPI_SRV/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    <atom:link rel="latest-version" href="http://20.119.82.103:8001/sap/opu/odata/gms/SCADAAPI_SRV/$metadata"
+                        xmlns:atom="http://www.w3.org/2005/Atom"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

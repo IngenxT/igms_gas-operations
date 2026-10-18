@@ -1,0 +1,251 @@
+{
+  "name": "igms_gascockpit",
+  "version": "1.0.0",
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^4.1.1",
+    "@sap-cloud-sdk/http-client": "^4.1.1",
+    "@sap-cloud-sdk/resilience": "^4.1.1",
+    "@sap/cds": "^10",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10",
+    "cds-plugin-ui5": "^0.17.0",
+    "rimraf": "^5.0.5",
+    "mbt": "^1.2.49"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "hybrid": "NODE_OPTIONS=\"$NODE_OPTIONS --disable-warning=DEP0190\" cds watch --profile hybrid",
+    "watch-igms_gasflow": "cds watch --open com.ingenx.igmsgasflow/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy igms_gascockpit --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+  },
+  "private": true,
+  "workspaces": [
+    "app/*"
+  ],
+  "cds": {
+    "requires": {
+      "GMSCONFIRMNOM_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSCONFIRMNOM_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/CONFIRMNOM_SRV",
+            "requestTimeout": 1200000
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/CONFIRMNOM_SRV",
+            "requestTimeout": 1200000
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSCONTRACT_MGMT_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSCONTRACT_MGMT_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/CONTRACT_MGMT_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/CONTRACT_MGMT_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSNOMINATIONS_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSNOMINATIONS_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/NOMINATIONS_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/NOMINATIONS_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSNOMLOG_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSNOMLOG_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/NOMLOG_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/NOMLOG_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSSCADAAPI_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSSCADAAPI_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/SCADAAPI_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/SCADAAPI_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSTICKET_API_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSTICKET_API_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/TICKET_API_SRV",
+            "requestTimeout": 1200000
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/TICKET_API_SRV",
+            "requestTimeout": 1200000
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSVALUEHELP_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSVALUEHELP_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/gms/VALUEHELP_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/VALUEHELP_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "igmsConfigMetaData": {
+        "kind": "odata",
+        "model": "srv/external/igmsConfigMetaData",
+        "credentials": {
+          "destination": "iGMS_CONFIGURATION_DESTINATION"
+        }
+      },
+      "YGMS_GAS_ALLOCATION_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/YGMS_GAS_ALLOCATION_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/sap/YGMS_GAS_ALLOCATION_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/sap/YGMS_GAS_ALLOCATION_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "YGMS_LOCATIONID_VH_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/YGMS_LOCATIONID_VH_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/sap/YGMS_LOCATIONID_VH_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/sap/YGMS_LOCATIONID_VH_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "YGMS_TRANSPORT_VALUEHELP_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/YGMS_TRANSPORT_VALUEHELP_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "IGMS_GAIL_DEV",
+            "path": "/sap/opu/odata/sap/YGMS_TRANSPORT_VALUEHELP_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/sap/YGMS_TRANSPORT_VALUEHELP_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "[development]": {
+        "auth": {
+          "kind": "dummy",
+          "users": {
+            "ashwani.sharma@ingenxtec.com": {
+              "name": "Ashwani Sharma",
+              "password": "password ",
+              "roles": [
+                "Shipper-Admin",
+                "AllocTicketing-Simulate-Button",
+                "AllocTicketing-AllocateSave-Button",
+                "AllocTicketing-Ticketing-Button",
+                "BalancingScheduling-ConfirmNomination-Button"
+              ]
+            }
+          }
+        }
+      },
+      "[production]": {
+        "auth": "xsuaa"
+      }
+    },
+    "server": {
+      "body_parser": {
+        "limit": "500mb"
+      }
+    }
+  }
+}
