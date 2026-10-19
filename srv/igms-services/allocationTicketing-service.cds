@@ -219,7 +219,7 @@ extend service gasOpsService {
   // locations failing meter/Rank/ARI006/nomination-drift/GCV-NCV-drift/balance checks,
   // then posts the survivors to S/4 ActualizeTicket in a background job. Poll
   // getProcessTicketingJobStatus with the returned JobId.
-  @requires: 'AllocTicketing-Ticketing-Button'
+  // TEMP (demo): @requires: 'AllocTicketing-Ticketing-Button'
   action   processTicketing(Gasday: Date, SelectionFilter: SelectionFilterT, SegmentFilter: SegmentFilterT) returns ProcessTicketingResult;
 
 
@@ -283,10 +283,11 @@ extend service gasOpsService {
           isInterconnect
     };
 
-  @restrict: [
-    { grant: 'CREATE', to: 'AllocTicketing-Ticketing-Button' },
-    { grant: ['READ', 'UPDATE', 'DELETE'], to: 'any' }
-  ]
+  // TEMP (demo): restriction disabled — restore afterwards.
+  // @restrict: [
+  //   { grant: 'CREATE', to: 'AllocTicketing-Ticketing-Button' },
+  //   { grant: ['READ', 'UPDATE', 'DELETE'], to: 'any' }
+  // ]
   entity ActualizeTicket             as
     projection on TICKETSRV.ActualizeTicket {
       key Actualize,
@@ -553,7 +554,7 @@ extend service gasOpsService {
     BlockedByTicketOrRank          : array of RunAllocateSaveIssue;
   }
 
-  @requires: 'AllocTicketing-AllocateSave-Button'
+  // TEMP (demo): @requires: 'AllocTicketing-AllocateSave-Button'
   action   RunAllocateSave(Gasday: Date, SelectionFilter: SelectionFilterT, SegmentFilter: SegmentFilterT) returns RunAllocateSaveResult;
 
   type ProcessTicketingJobItem {
@@ -572,6 +573,6 @@ extend service gasOpsService {
     processedItems : array of ProcessTicketingJobItem;
   }
 
-  @requires: 'AllocTicketing-Ticketing-Button'
+  // TEMP (demo): @requires: 'AllocTicketing-Ticketing-Button'
   function getProcessTicketingJobStatus(jobId: String(36)) returns ProcessTicketingJobStatus;
 }

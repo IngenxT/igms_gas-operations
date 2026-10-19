@@ -7,9 +7,15 @@
 // this returns, so the two can never drift into "UI allows it but backend
 // rejects it" or vice versa — both read the same JWT roles.
 module.exports = async (srv) => {
-  srv.on('getAllocTicketingAuth', req => ({
-    canSimulate: req.user.is('AllocTicketing-Simulate-Button'),
-    canAllocateSave: req.user.is('AllocTicketing-AllocateSave-Button'),
-    canTicket: req.user.is('AllocTicketing-Ticketing-Button')
+  // TEMP (demo): role checks disabled — all buttons shown. Restore the block below afterwards.
+  // srv.on('getAllocTicketingAuth', req => ({
+  //   canSimulate: req.user.is('AllocTicketing-Simulate-Button'),
+  //   canAllocateSave: req.user.is('AllocTicketing-AllocateSave-Button'),
+  //   canTicket: req.user.is('AllocTicketing-Ticketing-Button')
+  // }));
+  srv.on('getAllocTicketingAuth', () => ({
+    canSimulate: true,
+    canAllocateSave: true,
+    canTicket: true
   }));
 };

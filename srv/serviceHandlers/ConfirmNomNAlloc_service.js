@@ -1959,8 +1959,12 @@ module.exports = async (srv) => {
   // ── getConfirmNominationAuth — button-level authorization for Confirm Nomination ──
   // Display-only; confirmNominationSelected itself enforces the same scope via
   // @requires independently, so hiding the button here is never the security boundary.
-  srv.on('getConfirmNominationAuth', req => ({
-    canConfirmNomination: req.user.is('BalancingScheduling-ConfirmNomination-Button')
+  // TEMP (demo): role check disabled — button always shown. Restore the block below afterwards.
+  // srv.on('getConfirmNominationAuth', req => ({
+  //   canConfirmNomination: req.user.is('BalancingScheduling-ConfirmNomination-Button')
+  // }));
+  srv.on('getConfirmNominationAuth', () => ({
+    canConfirmNomination: true
   }));
 
 

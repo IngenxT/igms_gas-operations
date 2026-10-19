@@ -203,7 +203,7 @@ extend service gasOpsService {
   // Below CONFIRM_SYNC_THRESHOLD resolved rows this runs inline and returns the
   // final COMPLETED status; at/above it, returns a SUBMITTED jobId to poll via
   // getConfirmNominationJobStatus.
-  @requires: 'BalancingScheduling-ConfirmNomination-Button'
+  // TEMP (demo): @requires: 'BalancingScheduling-ConfirmNomination-Button'
   action   confirmNominationSelected(SelectedKeys: String)                       returns ConfirmNominationJobStatus;
 
   // Polls the status of a job started by confirmNominationSelected.
